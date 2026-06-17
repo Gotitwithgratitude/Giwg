@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#00c896" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="G.I.W.G" />
+<title>G.I.W.G — Got It With Gratitude</title>
+<link rel="manifest" href="manifest.json" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{--green:#00c896;--gold:#f0c040;--bg:#0a0e1a;--bg2:#0d1525;--text:#e8e4d8;--dim:rgba(232,228,216,0.45);--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.07);}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:linear-gradient(160deg,var(--bg),var(--bg2) 50%,#091320);color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;min-height:100vh;overflow-x:hidden;}
+.mono{font-family:'Space Mono',monospace;}
+.auth-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;}
+.auth-logo{font-size:13px;letter-spacing:5px;text-transform:uppercase;color:var(--green);font-family:'Space Mono',monospace;margin-bottom:8px;}
+.auth-title{font-size:32px;font-weight:700;margin-bottom:8px;text-align:center;}
+.auth-sub{font-size:13px;color:var(--dim);font-family:'Space Mono',monospace;letter-spacing:1px;margin-bottom:48px;text-align:center;}
+.auth-form{width:100%;max-width:380px;display:flex;flex-direction:column;gap:14px;}
+.auth-input{width:100%;padding:16px 18px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:15px;font-family:'Space Mono',monospace;outline:none;transition:border-color .2s;}
+.auth-input:focus{border-color:var(--green);}
+.auth-input::placeholder{color:var(--dim);}
+.pw-wrap{position:relative;}
+.pw-toggle{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--dim);font-size:11px;font-family:'Space Mono',monospace;cursor:pointer;letter-spacing:1px;}
+.btn-primary{width:100%;padding:16px;background:linear-gradient(135deg,var(--green),#00a878);border:none;border-radius:14px;color:#fff;font-size:13px;letter-spacing:3px;text-transform:uppercase;font-family:'Space Mono',monospace;cursor:pointer;transition:opacity .2s;margin-top:6px;}
+.btn-primary:active{opacity:.8;}
+.auth-switch{margin-top:20px;font-size:13px;color:var(--dim);font-family:'Space Mono',monospace;text-align:center;}
+.auth-switch span{color:var(--green);cursor:pointer;text-decoration:underline;}
+.auth-error{color:#ff6b6b;font-size:12px;font-family:'Space Mono',monospace;text-align:center;min-height:18px;}
+.dashboard{display:none;padding-bottom:80px;}
+.dash-header{padding:52px 24px 0;display:flex;justify-content:space-between;align-items:center;}
+.dash-brand-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--green);font-family:'Space Mono',monospace;margin-bottom:4px;}
+.dash-brand-name{font-size:18px;font-weight:700;}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--green),#0078c8);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;box-shadow:0 0 20px rgba(0,200,150,.3);}
+.streak{margin:20px 24px 0;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,rgba(240,192,64,.12),rgba(0,200,150,.06));border:1px solid rgba(240,192,64,.2);display:flex;align-items:center;justify-content:center;gap:8px;}
+.streak-num{font-size:20px;font-weight:700;color:var(--gold);}
+.streak-label{font-size:11px;color:var(--dim);font-family:'Space Mono',monospace;letter-spacing:1px;}
+.total-section{padding:28px 24px 20px;text-align:center;}
+.total-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);font-family:'Space Mono',monospace;margin-bottom:12px;}
+.total-amount{font-size:38px;font-weight:700;letter-spacing:-1px;background:linear-gradient(90deg,var(--green),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.total-sub{margin-top:8px;font-size:11px;color:rgba(232,228,216,.3);font-family:'Space Mono',monospace;letter-spacing:1px;}
+.accounts-section{padding:0 24px 16px;}
+.account-card{border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(0,200,150,.2);padding:24px;box-shadow:0 8px 40px rgba(0,200,150,.08);position:relative;overflow:hidden;}
+.card-glow{position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(0,200,150,.12),transparent 70%);border-radius:50%;}
+.card-name{font-size:14px;color:var(--dim);margin-bottom:4px;}
+.card-number{font-size:11px;color:rgba(232,228,216,.3);font-family:'Space Mono',monospace;margin-bottom:20px;letter-spacing:1px;}
+.card-balance{font-size:32px;font-weight:700;color:var(--green);}
+.card-balance-label{margin-top:6px;font-size:11px;color:rgba(232,228,216,.35);font-family:'Space Mono',monospace;letter-spacing:1px;}
+.pulse-dot{position:absolute;top:20px;right:20px;display:flex;align-items:center;gap:6px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 3s infinite;}
+@keyframes pulse{0%,100%{box-shadow:none;}50%{box-shadow:0 0 10px var(--green);}}
+.dot-label{font-size:10px;color:rgba(232,228,216,.3);font-family:'Space Mono',monospace;}
+.section{padding:0 24px 16px;}
+.section-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);font-family:'Space Mono',monospace;margin-bottom:14px;}
+.row{display:flex;gap:10px;}
+.fld{flex:1;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:14px;font-family:'Space Mono',monospace;outline:none;}
+.fld:focus{border-color:var(--green);}
+.btn-set{padding:14px 18px;background:rgba(0,200,150,.15);border:1px solid rgba(0,200,150,.3);border-radius:14px;color:var(--green);font-size:11px;letter-spacing:2px;font-family:'Space Mono',monospace;cursor:pointer;white-space:nowrap;}
+.affirm-box{padding:22px;border-radius:18px;background:linear-gradient(135deg,rgba(0,200,150,.06),rgba(240,192,64,.04));border:1px solid rgba(0,200,150,.18);text-align:center;}
+.affirm-text{font-size:18px;line-height:1.7;color:var(--text);font-style:italic;}
+.affirm-sig{margin-top:14px;font-size:10px;letter-spacing:4px;color:rgba(0,200,150,.5);font-family:'Space Mono',monospace;text-transform:uppercase;}
+.action-box{padding:18px;border-radius:16px;background:rgba(240,192,64,.06);border:1px solid rgba(240,192,64,.18);}
+.action-text{font-size:16px;color:var(--text);line-height:1.5;}
+.freq-row{display:flex;gap:8px;flex-wrap:wrap;}
+.freq-btn{flex:1;min-width:80px;padding:14px 8px;border-radius:14px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;text-align:center;transition:all .2s;}
+.freq-btn.active{background:rgba(0,200,150,.15);border-color:var(--green);color:var(--green);}
+.freq-hz{font-size:16px;font-weight:700;display:block;}
+.freq-name{font-size:9px;color:var(--dim);display:block;margin-top:2px;}
+.entry{padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);margin-bottom:8px;}
+.entry-text{font-size:14px;color:var(--text);}
+.entry-date{font-size:10px;color:var(--dim);font-family:'Space Mono',monospace;margin-top:4px;}
+.vision-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.vision-card{border-radius:14px;overflow:hidden;background:var(--card);border:1px solid var(--border);aspect-ratio:1;display:flex;flex-direction:column;}
+.vision-card img{width:100%;height:70%;object-fit:cover;}
+.vision-card .vt{padding:8px;font-size:12px;font-family:'Space Mono',monospace;color:var(--text);}
+.vision-empty{height:70%;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:24px;}
+.tx-item{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);margin-bottom:2px;}
+.tx-desc{font-size:13px;color:var(--text);}
+.tx-date{font-size:11px;color:rgba(232,228,216,.3);font-family:'Space Mono',monospace;margin-top:2px;}
+.tx-amount{font-size:14px;font-weight:600;font-family:'Space Mono',monospace;}
+.tx-credit{color:var(--green);}.tx-debit{color:#ff6b6b;}
+.upgrade-banner{margin:0 24px 16px;padding:20px;border-radius:18px;background:linear-gradient(135deg,rgba(240,192,64,.1),rgba(0,200,150,.05));border:1px solid rgba(240,192,64,.25);text-align:center;}
+.upgrade-title{font-size:16px;color:var(--gold);margin-bottom:6px;}
+.upgrade-sub{font-size:11px;color:var(--dim);font-family:'Space Mono',monospace;margin-bottom:8px;line-height:1.5;}
+.upgrade-price{font-size:13px;color:var(--text);font-family:'Space Mono',monospace;margin-bottom:14px;}
+.upgrade-price b{color:var(--green);}
+.btn-upgrade{padding:13px 26px;background:linear-gradient(135deg,var(--gold),#d4a800);border:none;border-radius:12px;color:#0a0e1a;font-size:11px;letter-spacing:2px;font-family:'Space Mono',monospace;cursor:pointer;font-weight:700;}
+.btn-donate{padding:13px 26px;background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.3);border-radius:12px;color:var(--green);font-size:11px;letter-spacing:2px;font-family:'Space Mono',monospace;cursor:pointer;}
+.footer-links{padding:8px 24px 0;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.flink{color:var(--dim);font-size:12px;font-family:'Space Mono',monospace;text-decoration:none;letter-spacing:1px;}
+.flink:hover{color:var(--green);}
+.logout-btn{margin:16px 24px 0;width:calc(100% - 48px);padding:14px;background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);border-radius:14px;color:#ff6b6b;font-size:11px;letter-spacing:3px;font-family:'Space Mono',monospace;text-transform:uppercase;cursor:pointer;}
+.member-badge{margin:0 24px 16px;padding:20px;border-radius:18px;background:linear-gradient(135deg,rgba(240,192,64,.18),rgba(0,200,150,.08));border:1px solid rgba(240,192,64,.4);text-align:center;box-shadow:0 0 30px rgba(240,192,64,.1);}
+.avatar.premium{background:linear-gradient(135deg,var(--gold),#d4a800);box-shadow:0 0 20px rgba(240,192,64,.5);}
+.freq-btn.locked{opacity:.4;}
+.freq-btn .lock{font-size:9px;color:var(--gold);display:block;margin-top:2px;}
+.grat-prompt{font-size:17px;color:var(--text);font-style:italic;text-align:center;margin-bottom:12px;line-height:1.5;}
+.shuffle{display:block;text-align:center;font-size:11px;color:var(--green);font-family:'Space Mono',monospace;cursor:pointer;margin-top:8px;letter-spacing:1px;}
+.thanks-ritual{margin-top:14px;padding:18px;border-radius:16px;background:rgba(240,192,64,.06);border:1px solid rgba(240,192,64,.18);text-align:center;}
+.thanks-label{font-size:14px;color:var(--dim);font-family:'Space Mono',monospace;margin-bottom:12px;letter-spacing:1px;transition:color .3s;}
+.thanks-label.done{color:var(--gold);font-size:16px;}
+.thanks-btn{padding:14px 30px;background:linear-gradient(135deg,rgba(240,192,64,.18),rgba(0,200,150,.1));border:1px solid rgba(240,192,64,.35);border-radius:30px;color:var(--gold);font-size:15px;font-family:'Space Mono',monospace;cursor:pointer;transition:transform .15s;}
+.thanks-btn:active{transform:scale(.92);}
+.thanks-btn.pulse{animation:thankPulse .4s ease;}
+@keyframes thankPulse{0%{box-shadow:0 0 0 0 rgba(240,192,64,.5);}100%{box-shadow:0 0 0 24px rgba(240,192,64,0);}}
+.btn-pause{width:100%;padding:18px;border-radius:18px;background:linear-gradient(135deg,rgba(0,200,150,.14),rgba(0,120,200,.08));border:1px solid rgba(0,200,150,.3);color:var(--green);font-size:14px;font-family:'Space Mono',monospace;letter-spacing:2px;cursor:pointer;}
+.breath-overlay{position:fixed;inset:0;background:radial-gradient(circle at center,#0d1525,#06080f);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.breath-overlay.open{display:flex;}
+.breath-circle{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(0,200,150,.35),rgba(0,200,150,.04));border:2px solid rgba(0,200,150,.45);transform:scale(.55);box-shadow:0 0 80px rgba(0,200,150,.3);}
+.breath-phase{margin-top:44px;font-size:26px;color:var(--text);letter-spacing:2px;min-height:34px;}
+.breath-timer{margin-top:10px;font-family:'Space Mono',monospace;font-size:13px;color:var(--dim);letter-spacing:2px;}
+.breath-close{margin-top:48px;padding:12px 28px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:24px;color:var(--dim);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;cursor:pointer;}
+.lifepath-result{margin-top:14px;padding:22px;border-radius:18px;background:linear-gradient(135deg,rgba(0,200,150,.08),rgba(240,192,64,.05));border:1px solid rgba(0,200,150,.2);text-align:center;display:none;}
+.lifepath-result.show{display:block;}
+.lp-num{font-size:48px;font-weight:700;background:linear-gradient(90deg,var(--green),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+.lp-title{font-size:18px;color:var(--text);margin-top:8px;}
+.lp-master{font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Space Mono',monospace;text-transform:uppercase;margin-top:6px;}
+.lp-desc{font-size:14px;color:var(--dim);margin-top:10px;line-height:1.6;font-style:italic;}
+.lp-info-overlay{position:fixed;inset:0;background:linear-gradient(160deg,#0a0e1a,#0d1525 60%,#091320);z-index:250;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.lp-info-overlay.open{display:block;}
+.lp-info-close{position:fixed;top:16px;right:16px;padding:10px 18px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:20px;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;z-index:260;}
+.lp-info-header{padding:64px 24px 16px;text-align:center;}
+.lp-info-num{font-size:84px;font-weight:700;line-height:1;background:linear-gradient(90deg,var(--green),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.lp-info-title{font-size:26px;color:var(--text);margin-top:6px;}
+.lp-info-master{font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Space Mono',monospace;text-transform:uppercase;margin-top:8px;}
+.lp-info-block{padding:0 26px 24px;max-width:600px;margin:0 auto;}
+.lp-info-block h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--green);font-family:'Space Mono',monospace;margin-bottom:8px;}
+.lp-info-block p{font-size:17px;line-height:1.75;color:var(--text);}
+.btn-share{margin-top:12px;width:100%;padding:14px;border-radius:14px;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.3);color:var(--green);font-size:12px;letter-spacing:2px;font-family:'Space Mono',monospace;cursor:pointer;}
+.btn-secondary{width:100%;padding:13px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);font-size:11px;letter-spacing:2px;font-family:'Space Mono',monospace;cursor:pointer;margin-top:8px;}
+.chart-wrap{padding:18px;border-radius:18px;background:var(--card);border:1px solid var(--border);}
+.chart-wrap svg{width:100%;height:140px;display:block;}
+.chart-cap{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:1px;text-align:center;margin-top:10px;}
+.num-grid{display:flex;gap:10px;}
+.num-card{flex:1;padding:18px 12px;border-radius:16px;background:var(--card);border:1px solid var(--border);text-align:center;}
+.num-big{font-size:34px;font-weight:700;background:linear-gradient(90deg,var(--green),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.num-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);font-family:'Space Mono',monospace;margin-top:6px;}
+.num-desc{font-size:12px;color:var(--text);margin-top:8px;font-style:italic;line-height:1.4;}
+.moon-card{padding:20px;border-radius:18px;background:linear-gradient(135deg,rgba(0,120,200,.1),rgba(255,255,255,.03));border:1px solid rgba(0,120,200,.2);text-align:center;}
+.moon-emoji{font-size:48px;}
+.moon-phase{font-size:18px;color:var(--text);margin-top:6px;}
+.moon-action{font-size:13px;color:var(--dim);margin-top:8px;font-style:italic;line-height:1.5;}
+.btn-mm{width:100%;padding:16px;border-radius:18px;background:linear-gradient(135deg,rgba(240,192,64,.14),rgba(0,200,150,.08));border:1px solid rgba(240,192,64,.3);color:var(--gold);font-size:13px;letter-spacing:2px;font-family:'Space Mono',monospace;cursor:pointer;}
+.ref-box{padding:18px;border-radius:16px;background:var(--card);border:1px solid var(--border);text-align:center;}
+.ref-code{font-family:'Space Mono',monospace;font-size:22px;color:var(--gold);letter-spacing:3px;margin:8px 0;}
+.ref-sub{font-size:12px;color:var(--dim);font-family:'Space Mono',monospace;line-height:1.5;}
+/* celebrate overlay */
+.celebrate-overlay{position:fixed;inset:0;background:radial-gradient(circle at center,rgba(240,192,64,.15),#0a0e1a 70%);z-index:300;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;}
+.celebrate-overlay.open{display:flex;animation:fadeUp .6s ease both;}
+.celebrate-num{font-size:90px;font-weight:700;background:linear-gradient(90deg,var(--green),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+.celebrate-title{font-size:26px;color:var(--text);margin-top:10px;}
+.celebrate-sub{font-size:14px;color:var(--dim);font-family:'Space Mono',monospace;margin-top:10px;letter-spacing:1px;line-height:1.6;}
+.celebrate-close{margin-top:34px;padding:14px 34px;background:linear-gradient(135deg,var(--gold),#d4a800);border:none;border-radius:24px;color:#0a0e1a;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;font-weight:700;cursor:pointer;}
+/* mind movie */
+.mm-overlay{position:fixed;inset:0;background:#06080f;z-index:300;display:none;align-items:center;justify-content:center;overflow:hidden;}
+.mm-overlay.open{display:flex;}
+.mm-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.5s ease;}
+.mm-img.show{opacity:.55;}
+.mm-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,15,.5),rgba(6,8,15,.85));}
+.mm-affirm{position:relative;z-index:2;padding:40px;text-align:center;font-size:26px;line-height:1.6;color:#fff;font-style:italic;max-width:560px;text-shadow:0 2px 30px rgba(0,0,0,.6);}
+.mm-close{position:fixed;top:18px;right:18px;z-index:5;padding:10px 20px;background:rgba(255,255,255,.1);border:1px solid var(--border);border-radius:22px;color:#fff;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
+/* share overlay */
+.share-overlay{position:fixed;inset:0;background:rgba(6,8,15,.92);z-index:300;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.share-overlay.open{display:flex;}
+.share-img{width:100%;max-width:340px;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.share-actions{display:flex;gap:10px;margin-top:18px;width:100%;max-width:340px;}
+.share-actions button{flex:1;padding:14px;border-radius:14px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border:none;}
+.share-dl{background:linear-gradient(135deg,var(--green),#00a878);color:#fff;}
+.share-cl{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--border) !important;}
+.cosmic-grid{display:flex;gap:10px;}
+.cosmic-card{flex:1;padding:16px 8px;border-radius:16px;background:linear-gradient(135deg,rgba(0,120,200,.1),rgba(255,255,255,.03));border:1px solid rgba(0,120,200,.18);text-align:center;}
+.cosmic-sym{font-size:24px;}
+.cosmic-sign{font-size:14px;color:var(--text);margin-top:6px;font-weight:600;}
+.cosmic-role{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);font-family:'Space Mono',monospace;margin-top:4px;}
+.sky-card{margin-top:12px;padding:16px;border-radius:16px;background:var(--card);border:1px solid var(--border);}
+.sky-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.sky-row:last-child{border-bottom:none;}
+.sky-k{font-size:12px;color:var(--dim);font-family:'Space Mono',monospace;letter-spacing:1px;}
+.sky-v{font-size:14px;color:var(--text);}
+.onboard-overlay{position:fixed;inset:0;background:linear-gradient(160deg,#080b14,#0d1525);z-index:320;display:none;overflow-y:auto;padding:48px 24px;}
+.onboard-overlay.open{display:block;}
+.onboard-inner{max-width:420px;margin:0 auto;}
+.onboard-note{font-size:12px;color:var(--dim);font-family:'Space Mono',monospace;line-height:1.6;text-align:center;margin-bottom:24px;}
+.onboard-skip{display:block;text-align:center;margin-top:16px;color:var(--dim);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;text-decoration:underline;}
+label.fldlabel{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-family:'Space Mono',monospace;margin:14px 0 6px;}
+.hero-tag{text-align:center;padding:26px 24px 4px;}
+.hero-core{display:inline-block;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:#0a0e1a;background:linear-gradient(135deg,var(--gold),#d4a800);padding:8px 20px;border-radius:24px;box-shadow:0 0 24px rgba(240,192,64,.3);}
+.hero-line{font-size:22px;color:var(--text);font-weight:600;line-height:1.3;margin-top:16px;}
+.hero-sub{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--green);text-transform:uppercase;margin-top:8px;}
+.pillar-grid{display:flex;gap:8px;}
+.pillar{flex:1;padding:16px 6px;border-radius:16px;background:var(--card);border:1px solid var(--border);text-align:center;transition:all .3s;}
+.pillar.on{background:linear-gradient(135deg,rgba(0,200,150,.12),rgba(240,192,64,.06));border-color:rgba(0,200,150,.35);box-shadow:0 0 18px rgba(0,200,150,.12);}
+.pillar-ico{font-size:22px;}
+.pillar-name{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);font-family:'Space Mono',monospace;margin-top:6px;}
+.pillar.on .pillar-name{color:var(--green);}
+.pillar-count{text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:2px;margin-top:12px;}
+.tour-overlay{position:fixed;inset:0;background:rgba(6,8,15,.94);z-index:330;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center;}
+.tour-overlay.open{display:flex;}
+.tour-step{max-width:480px;}
+.tour-num{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--green);text-transform:uppercase;margin-bottom:14px;}
+.tour-title{font-size:28px;color:var(--text);font-weight:700;margin-bottom:14px;}
+.tour-text{font-size:16px;color:var(--dim);line-height:1.7;margin-bottom:28px;}
+.tour-btns{display:flex;gap:10px;justify-content:center;}
+.tour-next{padding:13px 30px;background:linear-gradient(135deg,var(--green),#00a878);border:none;border-radius:12px;color:#fff;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;font-weight:700;cursor:pointer;}
+.tour-skip{margin-top:18px;color:var(--dim);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;text-decoration:underline;}
+.gs-card{margin:0 24px 16px;padding:18px;border-radius:18px;background:linear-gradient(135deg,rgba(0,200,150,.1),rgba(240,192,64,.05));border:1px solid rgba(0,200,150,.25);}
+.gs-title{font-size:14px;color:var(--green);font-family:'Space Mono',monospace;letter-spacing:1px;margin-bottom:12px;}
+.gs-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:14px;color:var(--text);}
+.gs-item .gs-ico{color:var(--gold);font-size:16px;}
+.help-btn{width:34px;height:34px;border-radius:50%;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.3);color:var(--green);font-size:16px;font-weight:700;cursor:pointer;}
+.price-clarity{font-size:11px;color:var(--dim);font-family:'Space Mono',monospace;margin-top:8px;letter-spacing:.5px;line-height:1.5;}
+.hidden{display:none !important;}
+.orb1{position:fixed;top:-80px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(0,200,150,.07),transparent 70%);border-radius:50%;pointer-events:none;z-index:-1;}
+.orb2{position:fixed;bottom:-60px;left:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(240,192,64,.05),transparent 70%);border-radius:50%;pointer-events:none;z-index:-1;}
+</style>
+<style>
+body{background:
+ radial-gradient(900px 500px at 80% -10%, rgba(0,200,150,.10), transparent 60%),
+ radial-gradient(700px 500px at -10% 20%, rgba(240,192,64,.07), transparent 55%),
+ radial-gradient(800px 600px at 50% 120%, rgba(0,120,200,.08), transparent 60%),
+ linear-gradient(160deg,#080b14,#0b1120 55%,#070b13);}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:-1;
+ background-image:
+ radial-gradient(1px 1px at 18% 28%,rgba(255,255,255,.5),transparent),
+ radial-gradient(1px 1px at 72% 62%,rgba(255,255,255,.35),transparent),
+ radial-gradient(1.6px 1.6px at 42% 82%,rgba(240,192,64,.45),transparent),
+ radial-gradient(1px 1px at 86% 22%,rgba(0,200,150,.45),transparent),
+ radial-gradient(1px 1px at 56% 14%,rgba(255,255,255,.35),transparent),
+ radial-gradient(1px 1px at 9% 68%,rgba(255,255,255,.3),transparent),
+ radial-gradient(1.4px 1.4px at 33% 48%,rgba(255,255,255,.3),transparent);
+ animation:twinkle 7s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.45;}50%{opacity:.95;}}
+.noise{position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.04;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.dashboard.show{animation:fadeUp .85s cubic-bezier(.2,.7,.2,1) both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.dash-header{position:relative;padding-bottom:18px;}
+.dash-header:after{content:"";position:absolute;left:24px;right:24px;bottom:0;height:1px;
+ background:linear-gradient(90deg,transparent,rgba(240,192,64,.35),rgba(0,200,150,.25),transparent);}
+.dash-brand-name{font-weight:600;letter-spacing:.3px;}
+.section-label{position:relative;padding-left:16px;}
+.section-label:before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+ width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(240,192,64,.6);}
+.account-card,.affirm-box,.action-box,.member-badge,.upgrade-banner,.entry,.tx-item,.lifepath-result,.thanks-ritual,.check-item,.vision-card{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.account-card{box-shadow:0 10px 50px rgba(0,200,150,.12),inset 0 1px 0 rgba(255,255,255,.05);}
+.total-amount{text-shadow:0 0 36px rgba(0,200,150,.25);}
+.fld:hover,.freq-btn:hover{border-color:rgba(240,192,64,.4);}
+/* Daily practice checklist */
+.check-progress{text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:2px;margin-bottom:14px;}
+.check-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:all .2s;}
+.check-item:active{transform:scale(.99);}
+.check-item.done{background:rgba(0,200,150,.08);border-color:rgba(0,200,150,.32);}
+.check-box{width:26px;height:26px;border-radius:9px;border:1.5px solid var(--dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700;transition:all .2s;}
+.check-item.done .check-box{background:var(--green);border-color:var(--green);color:#04140e;}
+.check-text{font-size:15px;color:var(--text);}
+.check-item.done .check-text{color:var(--green);}
+/* Vision generator full image cards */
+.vision-card.full{aspect-ratio:1;}
+#lpAgesOverlay{z-index:280;}
+#lpAgesOverlay .lp-info-close{z-index:290;}
+.vision-card.full img{width:100%;height:100%;object-fit:cover;}
+.vision-loading{grid-column:1/3;text-align:center;padding:14px;color:var(--dim);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;}
+.vision-cap{grid-column:1/3;text-align:center;font-style:italic;color:var(--gold);font-size:15px;margin:0 0 6px;letter-spacing:1px;line-height:1.5;}
+.vision-card.full{background:rgba(255,255,255,.03);}
+</style>
+</head>
+<body>
+<div class="stars"></div><div class="noise"></div><div class="orb1"></div><div class="orb2"></div>
+
+<div class="auth-screen" id="loginScreen">
+<div class="auth-logo">G.I.W.G</div>
+<div class="auth-title">Got It With Gratitude</div>
+<div class="auth-sub">Gratitude is the foundation — grow in mind, body, spirit &amp; heart</div>
+<div class="auth-form">
+<input class="auth-input" id="loginEmail" type="email" placeholder="Email address" autocomplete="email"/>
+<div class="pw-wrap">
+<input class="auth-input" id="loginPassword" type="password" placeholder="Password"/>
+<button class="pw-toggle" onclick="togglePw('loginPassword',this)">SHOW</button>
+</div>
+<div class="auth-error" id="loginError"></div>
+<button class="btn-primary" onclick="handleLogin()">✦ Enter Your Abundance</button>
+</div>
+<div class="auth-switch">No account? <span onclick="showSignup()">Create one free</span></div>
+</div>
+
+<div class="auth-screen hidden" id="signupScreen">
+<div class="auth-logo">G.I.W.G</div>
+<div class="auth-title">Begin Your Journey</div>
+<div class="auth-sub">Create your free account</div>
+<div class="auth-form">
+<input class="auth-input" id="signupName" type="text" placeholder="Your name"/>
+<input class="auth-input" id="signupEmail" type="email" placeholder="Email address"/>
+<div class="pw-wrap">
+<input class="auth-input" id="signupPassword" type="password" placeholder="Create password (min 6 chars)"/>
+<button class="pw-toggle" onclick="togglePw('signupPassword',this)">SHOW</button>
+</div>
+<div class="auth-error" id="signupError"></div>
+<button class="btn-primary" onclick="handleSignup()">✦ Start Manifesting</button>
+</div>
+<div class="auth-switch">Have an account? <span onclick="showLogin()">Sign in</span></div>
+</div>
+
+<div class="dashboard" id="dashboard">
+<div class="dash-header">
+<button class="help-btn" onclick="startTour()" title="How it works">?</button>
+<div style="text-align:center;"><div class="dash-brand-label">G.I.W.G</div><div class="dash-brand-name">Got It With Gratitude</div></div>
+<div class="avatar" id="avatarInitial">K</div>
+</div>
+
+<div class="hero-tag">
+<div class="hero-core">✦ Centered in Gratitude ✦</div>
+<div class="hero-line">Become the best version of you</div>
+<div class="hero-sub">Mind · Body · Spirit · Heart</div>
+</div>
+
+<div class="section">
+<div class="section-label">Your Four Pillars Today</div>
+<div class="pillar-grid" id="pillarGrid"></div>
+<div class="pillar-count" id="pillarCount">0 / 4 PILLARS NURTURED TODAY</div>
+</div>
+
+<div class="gs-card hidden" id="onboardingGuide">
+<div class="gs-title" id="gsTitle">✦ Getting Started</div>
+<div id="gsItems"></div>
+</div>
+
+<div class="streak">
+<span class="streak-num" id="streakNum">1</span>
+<span class="streak-label" id="streakLabel">DAY STREAK · KEEP SHOWING UP</span>
+</div>
+
+<div class="total-section">
+<div class="total-label">Total Portfolio</div>
+<div class="total-amount" id="totalDisplay">$0.00</div>
+<div class="total-sub">Your Vision Balance · One of many tools</div>
+</div>
+
+<div class="accounts-section">
+<div class="account-card">
+<div class="card-glow"></div>
+<div class="card-name" id="cardName">G.I.W.G Business Account</div>
+<div class="card-number">••••  ••••  ••••  7741</div>
+<div class="card-balance" id="balanceDisplay">$0.00</div>
+<div class="card-balance-label">Available Balance</div>
+<div class="pulse-dot"><div class="dot"></div><span class="dot-label">LIVE</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Set Your Vision</div>
+<div class="row" style="margin-bottom:10px;">
+<input class="fld" id="balanceInput" type="number" placeholder="Vision balance ($)"/>
+<button class="btn-set" onclick="setBalance()">SET</button>
+</div>
+<div class="row">
+<input class="fld" id="growthInput" type="number" step="0.1" placeholder="Daily growth %"/>
+<button class="btn-set" onclick="setGrowth()">GROW</button>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Today's Affirmation</div>
+<div class="affirm-box">
+<div class="affirm-text" id="affirmText">—</div>
+<div class="affirm-sig">Got It With Gratitude · Life Path 22</div>
+</div>
+<button class="btn-share" onclick="shareAffirmation()">⇪ Share This Affirmation</button>
+</div>
+
+<div class="section">
+<div class="section-label">Today's Money Move</div>
+<div class="action-box"><div class="action-text" id="actionText">—</div></div>
+</div>
+
+<div class="section">
+<div class="section-label">Daily Practice</div>
+<div class="check-progress" id="checkProgress">0 / 5 COMPLETE TODAY</div>
+<div id="checklist"></div>
+</div>
+
+<div class="section">
+<div class="section-label">Abundance Frequencies</div>
+<div class="freq-row" id="freqRow"></div>
+</div>
+
+<div class="section">
+<div class="section-label">Gratitude Journal</div>
+<div class="grat-prompt" id="gratPrompt">Why are you grateful today?</div>
+<div class="row" style="margin-bottom:6px;">
+<input class="fld" id="gratInput" type="text" placeholder="Write your reason..."/>
+<button class="btn-set" onclick="addGratitude()">ADD</button>
+</div>
+<span class="shuffle" onclick="newGratPrompt()">↻ New prompt</span>
+<div style="margin-top:14px;" id="gratList"></div>
+<div class="thanks-ritual">
+<div class="thanks-label" id="thanksLabel">Affirm it — tap to say thank you 3 times</div>
+<button class="thanks-btn" id="thanksBtn" onclick="tapThanks()">🙏 Thank You</button>
+</div>
+</div>
+
+<div class="section hidden" id="pauseSection">
+<div class="section-label">Pause Moment</div>
+<button class="btn-pause" onclick="startPause()">⏸  Take a Minute — Guided Breath</button>
+</div>
+
+<div class="section">
+<div class="section-label">Vision Board</div>
+<div class="grat-prompt">Describe the future you're calling in</div>
+<div class="row" style="margin-bottom:6px;">
+<input class="fld" id="visionPrompt" type="text" placeholder="oceanfront villa, private jet, freedom, wealth…"/>
+<button class="btn-set" onclick="generateVision()">✦ SEE</button>
+</div>
+<span class="shuffle" onclick="shuffleVision()">↻ Shuffle new images</span>
+<div class="vision-grid" id="visionGrid" style="margin-top:14px;"></div>
+<button class="btn-mm hidden" id="mindMovieBtn" onclick="startMindMovie()" style="margin-top:14px;">▶  Play Your Mind Movie</button>
+</div>
+
+<div class="section">
+<div class="section-label">Dream Journal</div>
+<div class="grat-prompt">What do you remember from your dreams?</div>
+<div class="row" style="margin-bottom:6px;">
+<input class="fld" id="dreamInput" type="text" placeholder="Any image, feeling, or symbol…"/>
+<button class="btn-set" onclick="addDream()">LOG</button>
+</div>
+<div style="margin-top:14px;" id="dreamList"></div>
+</div>
+
+<div class="section">
+<div class="section-label">Life Path Calculator</div>
+<div class="row">
+<input class="fld" id="dobInput" type="date"/>
+<button class="btn-set" onclick="calcLifePath()">CALCULATE</button>
+</div>
+<div class="lifepath-result" id="lpResult">
+<div class="lp-num" id="lpNum">—</div>
+<div class="lp-title" id="lpTitle"></div>
+<div class="lp-master" id="lpMaster"></div>
+<div class="lp-desc" id="lpDesc"></div>
+<button class="btn-set" id="lpMoreBtn" onclick="showLifePathInfo()" style="margin-top:16px;width:100%;">✦ More Info — Your Full Profile</button>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Your Trajectory</div>
+<div class="chart-wrap">
+<svg id="growthChart" viewBox="0 0 320 140" preserveAspectRatio="none"></svg>
+<div class="chart-cap" id="chartCap">Projected 90-day vision growth</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Numerology Today</div>
+<div class="num-grid">
+<div class="num-card"><div class="num-big" id="pyNum">—</div><div class="num-label">Personal Year</div><div class="num-desc" id="pyDesc">Calculate your Life Path first</div></div>
+<div class="num-card"><div class="num-big" id="dnNum">—</div><div class="num-label">Today's Number</div><div class="num-desc" id="dnDesc"></div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Your Cosmic Profile</div>
+<div class="cosmic-grid">
+<div class="cosmic-card"><div class="cosmic-sym">☉</div><div class="cosmic-sign" id="sunSign">—</div><div class="cosmic-role">Sun</div></div>
+<div class="cosmic-card"><div class="cosmic-sym">☾</div><div class="cosmic-sign" id="moonSign">—</div><div class="cosmic-role">Moon</div></div>
+<div class="cosmic-card"><div class="cosmic-sym">↑</div><div class="cosmic-sign" id="ascSign">—</div><div class="cosmic-role">Rising</div></div>
+</div>
+<div class="sky-card">
+<div class="sky-row"><span class="sky-k">Current Season</span><span class="sky-v" id="skySeason">—</span></div>
+<div class="sky-row"><span class="sky-k">Moon Travels Through</span><span class="sky-v" id="skyMoon">—</span></div>
+<div class="sky-row"><span class="sky-k">Next Turning Point</span><span class="sky-v" id="skyEvent">—</span></div>
+</div>
+<button class="btn-secondary" onclick="showOnboarding()" id="editBirthBtn">✦ Edit Birth Details</button>
+</div>
+
+<div class="section">
+<div class="section-label">Moon Phase</div>
+<div class="moon-card">
+<div class="moon-emoji" id="moonEmoji">🌙</div>
+<div class="moon-phase" id="moonPhase">—</div>
+<div class="moon-action" id="moonAction"></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Recent Activity</div>
+<div id="txList"></div>
+</div>
+
+<div class="member-badge hidden" id="memberBadge">
+<div class="upgrade-title" style="color:var(--gold);">✦ Abundant Member</div>
+<div class="upgrade-sub">All premium tools unlocked · Thank you for manifesting with G.I.W.G</div>
+</div>
+
+<div class="section hidden" id="customAffirmSection">
+<div class="section-label">Your Custom Affirmation</div>
+<div class="row">
+<input class="fld" id="customAffirmInput" type="text" placeholder="Write your own daily affirmation..."/>
+<button class="btn-set" onclick="saveCustomAffirm()">SAVE</button>
+</div>
+</div>
+
+<div class="upgrade-banner" id="upgradeBanner">
+<div class="upgrade-title">✦ Unlock Abundant Tier</div>
+<div class="upgrade-sub">AI affirmations · Unlimited vision boards · Custom frequencies · Priority manifestation tools</div>
+<div class="upgrade-price"><b>$1.11/mo</b> for your first 90 days, then <b>$2.22/mo</b></div>
+<div class="price-clarity">Renews automatically at $2.22/mo after 90 days. Cancel anytime.</div>
+<button class="btn-upgrade" onclick="handleUpgrade()">Start for $1.11/mo</button>
+<button class="btn-secondary" onclick="handleAnnual()">Or go Annual — $18/yr (save 25%)</button>
+<button class="btn-secondary" onclick="handleGift()">🎁 Gift a Membership</button>
+</div>
+
+<div class="section">
+<div class="section-label">Invite & Earn</div>
+<div class="ref-box">
+<div class="ref-sub">Share your code. When friends join, you both rise.</div>
+<div class="ref-code" id="refCode">GIWG-—</div>
+<button class="btn-share" onclick="shareReferral()">⇪ Share Your Invite</button>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Daily Reminder</div>
+<button class="btn-secondary" onclick="enableReminder()" id="reminderBtn">🔔 Remind Me to Manifest Daily</button>
+</div>
+
+<div class="section" style="text-align:center;">
+<button class="btn-donate" onclick="handleDonate()">♡ Support G.I.W.G — Donate</button>
+</div>
+
+<div class="footer-links">
+<a class="flink" href="https://giwg.org" target="_blank">Visit giwg.org →</a>
+</div>
+
+<button class="logout-btn" onclick="handleLogout()">Sign Out</button>
+</div>
+
+<div class="tour-overlay" id="tourOverlay">
+<div class="tour-step">
+<div class="tour-num" id="tourNum">Step 1 / 4</div>
+<div class="tour-title" id="tourTitle">Welcome</div>
+<div class="tour-text" id="tourText"></div>
+<div class="tour-btns"><button class="tour-next" onclick="nextTour()">Next →</button></div>
+<div class="tour-skip" onclick="closeTour()">Skip tour</div>
+</div>
+</div>
+
+<div class="onboard-overlay" id="onboardOverlay">
+<div class="onboard-inner">
+<div class="auth-logo" style="text-align:center;">G.I.W.G</div>
+<div class="auth-title" style="font-size:26px;">Your Cosmic Blueprint</div>
+<div class="onboard-note">To reveal your Moon and Rising signs, the stars need your exact arrival. Rising sign requires your birth time and place.</div>
+<label class="fldlabel">Birth Date</label>
+<input class="auth-input" id="obDate" type="date"/>
+<label class="fldlabel">Birth Time</label>
+<input class="auth-input" id="obTime" type="time"/>
+<label class="fldlabel">Birth Place</label>
+<select class="auth-input" id="obCity"></select>
+<div class="auth-error" id="obError"></div>
+<button class="btn-primary" onclick="saveOnboarding()">✦ Reveal My Chart</button>
+<span class="onboard-skip" onclick="skipOnboarding()">I don't have it yet — I'll add this later</span>
+</div>
+</div>
+
+<div class="celebrate-overlay" id="celebrateOverlay">
+<div class="celebrate-num" id="celebrateNum">7</div>
+<div class="celebrate-title" id="celebrateTitle">Day Streak!</div>
+<div class="celebrate-sub" id="celebrateSub"></div>
+<button class="celebrate-close" onclick="closeCelebrate()">Keep Rising ✦</button>
+</div>
+
+<div class="mm-overlay" id="mmOverlay">
+<button class="mm-close" onclick="stopMindMovie()">✕ CLOSE</button>
+<img class="mm-img" id="mmImg"/>
+<div class="mm-veil"></div>
+<div class="mm-affirm" id="mmAffirm"></div>
+</div>
+
+<div class="share-overlay" id="shareOverlay">
+<img class="share-img" id="shareImg"/>
+<div class="share-actions">
+<button class="share-dl" onclick="downloadShare()">⤓ SAVE IMAGE</button>
+<button class="share-cl" onclick="closeShare()">CLOSE</button>
+</div>
+</div>
+
+<canvas id="cardCanvas" width="1080" height="1080" style="display:none;"></canvas>
+
+<div class="breath-overlay" id="breathOverlay">
+<div class="breath-circle" id="breathCircle"></div>
+<div class="breath-phase" id="breathPhase">Get ready…</div>
+<div class="breath-timer" id="breathTimer">1:00</div>
+<button class="breath-close" onclick="stopPause()">END EARLY</button>
+</div>
+
+<div class="lp-info-overlay" id="lpAgesOverlay">
+<button class="lp-info-close" onclick="closeLifePathHistory()">✕ CLOSE</button>
+<div class="lp-info-header">
+<div class="lp-info-num" id="lpaNum">—</div>
+<div class="lp-info-title">Through the Ages</div>
+<div class="lp-info-master" id="lpaSub"></div>
+</div>
+<div id="lpaBody"></div>
+</div>
+
+<div class="lp-info-overlay" id="lpInfoOverlay">
+<button class="lp-info-close" onclick="closeLifePathInfo()">✕ CLOSE</button>
+<div class="lp-info-header">
+<div class="lp-info-num" id="lpiNum">—</div>
+<div class="lp-info-title" id="lpiTitle"></div>
+<div class="lp-info-master" id="lpiMaster"></div>
+</div>
+<div id="lpiBody"></div>
+</div>
+
+<script>
+const UK='giwg_users',SK='giwg_session',DK='giwg_data_';
+/* Preview premium experience: set true to see the subscriber view */
+const PREVIEW_PREMIUM=false;
+const FREE_VISION_MAX=2;
+const FREE_FREQ_MAX=3;
+/* === REPLACE THESE TWO WITH YOUR REAL PAYMENT LINKS === */
+const DONATE_URL='https://www.venmo.com/u/gotitwithgratitude';
+const SUBSCRIBE_URL='https://buy.stripe.com/YOUR-CHECKOUT-LINK';
+const ANNUAL_URL='https://buy.stripe.com/YOUR-ANNUAL-LINK';
+const GIFT_URL='https://buy.stripe.com/YOUR-GIFT-LINK';
+/* ====================================================== */
+
+const DEFAULT_TX=[
+{desc:'G.I.W.G Client Payment',amount:12500,date:'Jun 1',type:'credit'},
+{desc:'Consulting Retainer',amount:8000,date:'Jun 1',type:'credit'},
+{desc:'Stripe Payout',amount:3240.50,date:'May 31',type:'credit'},
+{desc:'Brand Partnership',amount:2100,date:'May 28',type:'credit'},
+{desc:'Software & Tools',amount:-299,date:'May 29',type:'debit'}];
+
+const AFFIRMATIONS=[
+"This is already mine. Abundance flows to me effortlessly.",
+"Every dollar I receive is a reflection of the gratitude I carry.",
+"I operate from overflow — always.",
+"Money moves toward me because I am aligned with my purpose.",
+"I am a magnet for wealth, opportunity, and divine timing.",
+"What I appreciate, appreciates. My abundance multiplies.",
+"I release scarcity. I am rooted in infinite supply.",
+"My energy is currency. I spend it on what expands me.",
+"I trust the universe to deliver what I have already claimed.",
+"Wealth is my natural state. I simply remember it.",
+"I am worthy of receiving more than I can imagine.",
+"Today I act from the frequency of the version who already has it.",
+"Gratitude is my magnet. The more I give thanks, the more arrives.",
+"I am the architect of my reality. I build in abundance.",
+"Every closed door redirects me to a richer one.",
+"I am calm, certain, and wealthy in spirit and in form.",
+"My vision is not a wish — it is a memory of my future.",
+"I attract aligned people, money, and momentum daily.",
+"I am Life Path 22. I build the impossible into the real.",
+"Prosperity recognizes me. I let it in without resistance.",
+"I am grateful for the wealth already on its way to me.",
+"My worth is not negotiable. The world meets my standard.",
+"I plant seeds today that harvest abundance tomorrow.",
+"I am safe to be wealthy. I am safe to receive.",
+"The frequency I hold is the reality I attract.",
+"I am the calm in the center of my growing empire.",
+"Abundance is not coming. Abundance is here, expanding.",
+"I give generously because I trust the supply is endless.",
+"My bank account reflects the energy I refuse to lower.",
+"I am proof that gratitude and grit build wealth.",
+"I rise in vibration and the money rises with me.",
+"Every breath I take, I breathe in possibility.",
+"I am aligned, I am abundant, I am awake.",
+"I receive with open hands and an open heart.",
+"My purpose pays. My alignment compounds.",
+"I am building generational abundance, starting now.",
+"I deserve ease. I deserve overflow. I deserve more.",
+"The universe conspires in my favor every single day.",
+"I am the energy of yes. Opportunity answers.",
+"My gratitude today is the foundation of my wealth tomorrow.",
+"I am unshakable. My abundance is unstoppable.",
+"I trust my timing. Everything arrives precisely when aligned.",
+"I am a vessel for prosperity to move through.",
+"Money loves my clarity, my focus, and my faith.",
+"I expand. The world expands to meet me."];
+
+const ACTIONS=[
+"Send one message to a potential client or collaborator today.",
+"Review one expense you can cut and redirect that energy.",
+"Write down one number you're calling in — and why it's already yours.",
+"Reach out to someone who's already where you want to be.",
+"Post one piece of content that reflects your abundance.",
+"Move $1 (or more) toward a savings or investment account.",
+"List one skill you can monetize this week.",
+"Follow up on one opportunity you let go cold.",
+"Spend 5 minutes visualizing the work — not just the reward.",
+"Ask for something today. A rate, a referral, a yes.",
+"Tidy one corner of your workspace — clear space, clear flow.",
+"Thank one person who helped you get here.",
+"Identify one income stream you can start this month.",
+"Set one boundary that protects your energy and your time.",
+"Take one small action your future wealthy self would take."];
+
+const FREQS=[
+{hz:396,name:'Release Fear'},
+{hz:432,name:'Natural Tune'},
+{hz:528,name:'Abundance'},
+{hz:639,name:'Connection'},
+{hz:741,name:'Awakening'},
+{hz:852,name:'Intuition'}];
+
+const GRAT_PROMPTS=[
+"Why are you grateful today?",
+"Who made your day a little brighter?",
+"What abundance showed up for you recently?",
+"What is one thing your body did for you today?",
+"What opportunity are you thankful is on its way?",
+"What small win deserves your gratitude?",
+"Who supported you this week?",
+"What do you have today that you once prayed for?",
+"What part of your journey are you proud of?",
+"What is working in your favor right now?"];
+const fmt=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
+const getUsers=()=>JSON.parse(localStorage.getItem(UK)||'{}');
+const saveUsers=u=>localStorage.setItem(UK,JSON.stringify(u));
+const getSession=()=>localStorage.getItem(SK);
+const setSession=e=>localStorage.setItem(SK,e);
+const clearSession=()=>localStorage.removeItem(SK);
+const getData=e=>JSON.parse(localStorage.getItem(DK+e)||'null');
+const saveData=(e,d)=>localStorage.setItem(DK+e,JSON.stringify(d));
+const isPremium=e=>{const d=getData(e);return PREVIEW_PREMIUM||(d&&d.premium);};
+const dayOfYear=()=>{const n=new Date();const s=new Date(n.getFullYear(),0,0);return Math.floor((n-s)/86400000);};
+
+function togglePw(id,btn){const f=document.getElementById(id);if(f.type==='password'){f.type='text';btn.textContent='HIDE';}else{f.type='password';btn.textContent='SHOW';}}
+function showLogin(){document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('signupScreen').classList.add('hidden');}
+function showSignup(){document.getElementById('signupScreen').classList.remove('hidden');document.getElementById('loginScreen').classList.add('hidden');}
+
+function handleLogin(){
+const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+const pass=document.getElementById('loginPassword').value;
+const err=document.getElementById('loginError');const users=getUsers();
+if(!email||!pass){err.textContent='Please fill in all fields.';return;}
+if(!users[email]||users[email].password!==pass){err.textContent='Invalid email or password.';return;}
+err.textContent='';setSession(email);loadDashboard(email);}
+
+function handleSignup(){
+const name=document.getElementById('signupName').value.trim();
+const email=document.getElementById('signupEmail').value.trim().toLowerCase();
+const pass=document.getElementById('signupPassword').value;
+const err=document.getElementById('signupError');const users=getUsers();
+if(!name||!email||!pass){err.textContent='Please fill in all fields.';return;}
+if(pass.length<6){err.textContent='Password must be at least 6 characters.';return;}
+if(users[email]){err.textContent='Account already exists. Sign in instead.';return;}
+users[email]={name,password:pass};saveUsers(users);
+saveData(email,{balance:0,growth:0,setAt:Date.now(),transactions:DEFAULT_TX,gratitude:[],dreams:[],vision:{prompt:"",seeds:[]},checklist:{date:"",items:[false,false,false,false,false]},celebrated:[],dob:"",astro:null,joined:Date.now(),streak:1,lastOpen:new Date().toDateString()});
+err.textContent='';setSession(email);loadDashboard(email);startTour();showOnboarding();}
+
+let growthTimer=null;
+function loadDashboard(email){
+const users=getUsers();const user=users[email];
+let d=getData(email)||{balance:0,growth:0,setAt:Date.now(),transactions:DEFAULT_TX,gratitude:[],dreams:[],vision:{prompt:"",seeds:[]},checklist:{date:"",items:[false,false,false,false,false]},celebrated:[],dob:"",astro:null,joined:Date.now(),streak:1,lastOpen:new Date().toDateString()};
+// streak logic
+const today=new Date().toDateString();
+const yest=new Date(Date.now()-86400000).toDateString();
+if(d.lastOpen!==today){if(d.lastOpen===yest){d.streak=(d.streak||0)+1;}else{d.streak=1;}d.lastOpen=today;saveData(email,d);}
+document.getElementById('loginScreen').classList.add('hidden');
+document.getElementById('signupScreen').classList.add('hidden');
+document.getElementById('dashboard').style.display='block';document.getElementById('dashboard').classList.add('show');
+document.getElementById('avatarInitial').textContent=(user.name||email).charAt(0).toUpperCase();
+document.getElementById('cardName').textContent=(user.name||'Your')+"'s G.I.W.G Account";
+document.getElementById('streakNum').textContent=d.streak;
+document.getElementById('streakLabel').textContent=(d.streak===1?'DAY':'DAYS')+' STREAK · KEEP SHOWING UP';
+document.getElementById('affirmText').textContent='"'+AFFIRMATIONS[dayOfYear()%AFFIRMATIONS.length]+'"';
+document.getElementById('actionText').textContent=ACTIONS[dayOfYear()%ACTIONS.length];
+applyTier(email,d);newGratPrompt();renderFreqs(email);renderGratitude(d.gratitude);renderDreams(d.dreams);renderVisionBoard(d);renderChecklist(d);renderPillars(d);renderGettingStarted(d);renderChart(d);renderNumerology(d);renderMoon();renderCosmic(d);renderReferral(email);renderTx(d.transactions);checkMilestone(d);
+if(growthTimer)clearInterval(growthTimer);
+const tick=()=>{const cur=getData(email);if(!cur)return;const days=(Date.now()-(cur.setAt||Date.now()))/86400000;const val=(cur.balance||0)*Math.pow(1+(cur.growth||0)/100,days);document.getElementById('balanceDisplay').textContent=fmt(val);document.getElementById('totalDisplay').textContent=fmt(val);};
+tick();growthTimer=setInterval(tick,1000);}
+
+function applyTier(email,d){
+const prem=isPremium(email);
+document.getElementById('upgradeBanner').classList.toggle('hidden',prem);
+document.getElementById('memberBadge').classList.toggle('hidden',!prem);
+document.getElementById('customAffirmSection').classList.toggle('hidden',!prem);
+document.getElementById('pauseSection').classList.toggle('hidden',!prem);
+var lpMore=document.getElementById('lpMoreBtn');if(lpMore)lpMore.textContent=prem?'✦ More Info — Your Full Profile':'🔒 Full Profile — Abundant Only';
+var mm=document.getElementById('mindMovieBtn');if(mm)mm.classList.toggle('hidden',!prem);
+document.getElementById('avatarInitial').classList.toggle('premium',prem);
+if(prem&&d.customAffirm){document.getElementById('affirmText').textContent='"'+d.customAffirm+'"';document.getElementById('customAffirmInput').value=d.customAffirm;}
+}
+function saveCustomAffirm(){const e=getSession();const t=document.getElementById('customAffirmInput').value.trim();const d=getData(e);d.customAffirm=t;saveData(e,d);if(t)document.getElementById('affirmText').textContent='"'+t+'"';else document.getElementById('affirmText').textContent='"'+AFFIRMATIONS[dayOfYear()%AFFIRMATIONS.length]+'"';}
+function setBalance(){const e=getSession();const v=parseFloat(document.getElementById('balanceInput').value);if(isNaN(v))return;const d=getData(e);d.balance=v;d.setAt=Date.now();saveData(e,d);document.getElementById('balanceInput').value='';loadDashboard(e);}
+function setGrowth(){const e=getSession();const v=parseFloat(document.getElementById('growthInput').value);if(isNaN(v))return;const d=getData(e);const days=(Date.now()-(d.setAt||Date.now()))/86400000;d.balance=(d.balance||0)*Math.pow(1+(d.growth||0)/100,days);d.growth=v;d.setAt=Date.now();saveData(e,d);document.getElementById('growthInput').value='';loadDashboard(e);}
+
+function addGratitude(){const e=getSession();const t=document.getElementById('gratInput').value.trim();if(!t)return;const d=getData(e);d.gratitude.unshift({text:t,date:new Date().toLocaleDateString()});saveData(e,d);document.getElementById('gratInput').value='';renderGratitude(d.gratitude);renderPillars(d);renderGettingStarted(d);}
+function renderGratitude(g){document.getElementById('gratList').innerHTML=(g||[]).slice(0,10).map(x=>`<div class="entry"><div class="entry-text">♡ ${x.text}</div><div class="entry-date">${x.date}</div></div>`).join('')||'<div class="entry-date" style="text-align:center;padding:8px;">Start your gratitude practice above.</div>';}
+
+function addVision(){const e=getSession();const t=document.getElementById('visionTitle').value.trim();const u=document.getElementById('visionUrl').value.trim();if(!t)return;const d=getData(e);if(!isPremium(e)&&(d.vision||[]).length>=FREE_VISION_MAX){alert('Free tier allows '+FREE_VISION_MAX+' vision pins. Upgrade to Abundant for unlimited.');return;}d.vision.unshift({title:t,url:u});saveData(e,d);document.getElementById('visionTitle').value='';document.getElementById('visionUrl').value='';renderVision(d.vision);}
+function renderVision(v){document.getElementById('visionGrid').innerHTML=(v||[]).map(x=>`<div class="vision-card">${x.url?`<img src="${x.url}" onerror="this.style.display='none'"/>`:`<div class="vision-empty">✦</div>`}<div class="vt">${x.title}</div></div>`).join('')||'<div class="entry-date" style="grid-column:1/3;text-align:center;padding:8px;">Pin your first vision above.</div>';}
+
+function newGratPrompt(){document.getElementById('gratPrompt').textContent=GRAT_PROMPTS[Math.floor(Math.random()*GRAT_PROMPTS.length)];}
+let thanksCount=0,thanksReset=null;
+function tapThanks(){const btn=document.getElementById('thanksBtn');const lbl=document.getElementById('thanksLabel');btn.classList.remove('pulse');void btn.offsetWidth;btn.classList.add('pulse');thanksCount++;if(thanksCount<3){lbl.classList.remove('done');lbl.textContent='Thank you… ('+thanksCount+'/3)';}else{lbl.classList.add('done');lbl.textContent='✦ Gratitude affirmed';thanksCount=0;if(thanksReset)clearTimeout(thanksReset);thanksReset=setTimeout(()=>{lbl.classList.remove('done');lbl.textContent='Affirm it — tap to say thank you 3 times';},3000);}}
+
+let breathTimers=[],breathCountdown=null;
+function startPause(){
+const ov=document.getElementById('breathOverlay');ov.classList.add('open');
+const circle=document.getElementById('breathCircle');const phase=document.getElementById('breathPhase');const timer=document.getElementById('breathTimer');
+let remaining=60;timer.textContent='1:00';
+breathCountdown=setInterval(()=>{remaining--;const m=Math.floor(remaining/60),sec=remaining%60;timer.textContent=m+':'+String(sec).padStart(2,'0');if(remaining<=0)stopPause();},1000);
+// phases: inhale 4s, hold 4s, exhale 6s
+const cycle=()=>{
+phase.textContent='Breathe In';circle.style.transition='transform 4s ease-in-out';circle.style.transform='scale(1.15)';
+breathTimers.push(setTimeout(()=>{phase.textContent='Hold';},4000));
+breathTimers.push(setTimeout(()=>{phase.textContent='Breathe Out';circle.style.transition='transform 6s ease-in-out';circle.style.transform='scale(0.55)';},8000));
+breathTimers.push(setTimeout(cycle,14000));
+};
+cycle();
+}
+function stopPause(){const ov=document.getElementById('breathOverlay');ov.classList.remove('open');breathTimers.forEach(clearTimeout);breathTimers=[];if(breathCountdown)clearInterval(breathCountdown);breathCountdown=null;}
+
+function addDream(){const e=getSession();const t=document.getElementById('dreamInput').value.trim();if(!t)return;const d=getData(e);if(!d.dreams)d.dreams=[];d.dreams.unshift({text:t,date:new Date().toLocaleDateString()});saveData(e,d);document.getElementById('dreamInput').value='';renderDreams(d.dreams);}
+function renderDreams(dr){document.getElementById('dreamList').innerHTML=(dr||[]).slice(0,15).map(x=>`<div class="entry"><div class="entry-text">☾ ${x.text}</div><div class="entry-date">${x.date}</div></div>`).join('')||'<div class="entry-date" style="text-align:center;padding:8px;">Log your first dream above.</div>';}
+
+const LP_MEANINGS={
+1:["The Leader","Independence, drive, and the courage to forge your own path."],
+2:["The Peacemaker","Harmony, partnership, and deep intuition for others."],
+3:["The Creative","Expression, joy, and the gift of inspiring others."],
+4:["The Builder","Structure, discipline, and the patience to build what lasts."],
+5:["The Freedom Seeker","Change, adventure, and a magnetic love of life."],
+6:["The Nurturer","Responsibility, love, and the call to care and heal."],
+7:["The Seeker","Wisdom, introspection, and a bridge to the unseen."],
+8:["The Powerhouse","Abundance, authority, and mastery over the material world."],
+9:["The Humanitarian","Compassion, completion, and service to the whole."],
+11:["The Visionary","Heightened intuition, illumination, and spiritual insight."],
+22:["The Master Builder","Turning the grandest dreams into tangible reality."],
+33:["The Master Teacher","Healing, devotion, and uplifting others through love."]};
+function reduceNum(n){while(n>9&&n!==11&&n!==22&&n!==33){n=String(n).split('').reduce((a,b)=>a+parseInt(b),0);}return n;}
+var currentLP=null;
+const LP_PROFILES={
+1:{essence:"You came here to lead, to initiate, to stand at the front of the line. Your soul is wired for independence and the courage to begin what others only talk about.",strengths:"Pioneering drive, originality, self-reliance, and the willingness to go first when no one else will.",challenges:"Stubbornness, isolation at the top, and impatience with those who move at a slower pace.",purpose:"To build something unmistakably your own and to inspire others through the power of your example.",love:"You need a partner who respects your independence and never tries to dim your fire.",career:"Founder, creator, pioneer — anything where you answer to your own vision. Abundance flows the moment you stop waiting for permission.",spiritual:"Your lesson is to learn that true strength includes knowing when to ask for help."},
+2:{essence:"You are the diplomat and the bridge, the one who feels the energy of a room before a single word is spoken. Harmony is your native language.",strengths:"Deep intuition, patience, cooperation, and a rare emotional intelligence.",challenges:"Over-giving, self-doubt, and a fear of conflict that can keep you small.",purpose:"To bring harmony where there is division and to remind the world that gentleness is its own form of power.",love:"Devoted and tender — your gift is partnership, but you must guard against losing yourself in others.",career:"Counselor, mediator, collaborator, artist. You thrive in partnership far more than in isolation.",spiritual:"Your lesson is to value your own needs as much as you value everyone else's."},
+3:{essence:"You are here to express, to delight, to turn raw feeling into form. Joy is not a luxury for you — it is your purpose.",strengths:"Communication, charm, imagination, and an optimism that lifts every room you enter.",challenges:"Scattered focus, emotional highs and lows, and a harsh inner critic.",purpose:"To uplift the world through your voice, your art, and your contagious joy.",love:"Playful and expressive — you need someone who celebrates your spark rather than competing with it.",career:"Artist, writer, speaker, performer, creator. Money follows the moment your expression becomes authentic.",spiritual:"Your lesson is to finish what you start and to trust that your gift is enough."},
+4:{essence:"You are the foundation. While others chase dreams, you quietly build the structure that holds the dream upright.",strengths:"Discipline, loyalty, reliability, and the patience to build what genuinely lasts.",challenges:"Rigidity, overwork, and a deep resistance to change.",purpose:"To create lasting security and the systems that others can build their lives upon.",love:"Steady and devoted — you show love by showing up, consistently, without fanfare.",career:"Engineer, operator, manager, builder. Wealth comes through consistency, systems, and the long game.",spiritual:"Your lesson is to learn that not everything needs to be controlled."},
+5:{essence:"You came for the full experience of life — movement, change, sensation, freedom. You are here to taste it all.",strengths:"Adaptability, magnetism, fearless curiosity, and natural courage.",challenges:"Restlessness, excess, and difficulty committing to one path.",purpose:"To experience life fully and to teach others that growth and freedom are sacred.",love:"You need space and adventure — routine quietly kills your spark.",career:"Entrepreneur, traveler, creator, communicator. Abundance arrives when you channel your freedom into focus.",spiritual:"Your lesson is to discover that true freedom is built within, not chased outside."},
+6:{essence:"You are the heart of the home, the natural healer, the one others instinctively lean on in hard times.",strengths:"Compassion, responsibility, loyalty, and a genuine gift for care.",challenges:"Over-responsibility, martyrdom, and the urge to control through love.",purpose:"To heal and nurture your family, your circle, and your community.",love:"Protective and devoted — your home is your sanctuary and your love is your art.",career:"Healer, teacher, counselor, hospitality — anything rooted in service and care.",spiritual:"Your lesson is to learn to receive care, not only to give it."},
+7:{essence:"You are the mystic and the analyst at once, here to find the truth that lives beneath the surface of things.",strengths:"Wisdom, sharp intuition, depth, and a fiercely independent mind.",challenges:"Isolation, overthinking, and difficulty trusting others.",purpose:"To seek knowledge and to become a bridge between the seen and the unseen.",love:"You need depth and solitude — surface connection drains you quickly.",career:"Researcher, analyst, specialist, spiritual teacher. You master what others only skim.",spiritual:"Your lesson is to trust — and to let others into your inner world."},
+8:{essence:"You came to master the material world — money, power, influence — and to wield it with integrity. Abundance is your birthright.",strengths:"Ambition, authority, vision, and a resilience that refuses to quit.",challenges:"Workaholism, control, and the trap of measuring your worth by your success.",purpose:"To build real abundance and use your power to lift others as you rise.",love:"You need a partner who matches your drive and helps you stay grounded.",career:"CEO, investor, executive, founder. This is the wealth number — prosperity is yours when power and heart stay balanced.",spiritual:"Your lesson is to learn that real power always serves more than the self."},
+9:{essence:"You are the old soul of the numbers, here to give, to complete cycles, and to love humanity as a whole.",strengths:"Compassion, wisdom, generosity, and a wide, humanitarian vision.",challenges:"Difficulty letting go, emotional overwhelm, and chronic self-sacrifice.",purpose:"To serve a cause far larger than yourself and to leave the world softer than you found it.",love:"You love deeply and universally — your work is to also master intimate, personal love.",career:"Humanitarian, healer, artist, leader of causes that matter.",spiritual:"Your lesson is to release what is complete and to allow yourself to receive."},
+11:{essence:"You carry the intuition of the 2 amplified into spiritual illumination. You are a channel — a lightning rod for insight others cannot yet see.",strengths:"Heightened intuition, inspiration, sensitivity, and visionary perception.",challenges:"Anxiety, nervous energy, and self-doubt under the sheer weight of your gift.",purpose:"To inspire and illuminate — to bring light into places that have only known the dark.",love:"Deeply sensitive — you need a grounded, patient partner who steadies your energy.",career:"Spiritual teacher, artist, healer, visionary leader. You move people without trying.",spiritual:"Your lesson is to trust your intuition and to learn to manage your immense energy."},
+22:{essence:"Yours is the most powerful number of all — the discipline of the 4 fused with the vision of the 11. You can take the grandest dream and make it physically real.",strengths:"Visionary practicality, natural leadership, mastery, and the rare ability to manifest at scale.",challenges:"Immense inner pressure, fear of your own potential, and all-or-nothing thinking.",purpose:"To build something monumental that serves humanity — to turn the impossible into the inevitable.",love:"You need a partner who understands your mission and supports the build without resentment.",career:"Founder, architect of systems, builder of legacies and institutions. Your abundance is limitless when you commit fully.",spiritual:"Your lesson is to trust divine timing and to stop crushing yourself under the weight of your own vision."},
+33:{essence:"Yours is the rarest path of all — pure devotion. The nurturing of the 6 raised to the level of spiritual mastery.",strengths:"Unconditional love, a healing presence, deep wisdom, and selfless service.",challenges:"Self-sacrifice, carrying others' emotional weight, and quiet perfectionism.",purpose:"To heal and teach through love itself — to be a living beacon of compassion.",love:"You love without condition — your work is to protect your own heart as fiercely as you protect others.",career:"Healer, teacher, spiritual leader, humanitarian on a soul level.",spiritual:"Your lesson is simple and hard: you cannot pour from an empty cup."}
+};
+const LP_HISTORY={
+1:"The vibration of the 1 has always belonged to those who go first. In ancient Persia, Cyrus the Great founded history's first great multicultural empire and issued one of the earliest known declarations of religious tolerance, freeing captive peoples rather than crushing them. In Egypt, Hatshepsut broke nearly a thousand years of precedent to rule as pharaoh, opening trade routes that enriched her kingdom for generations. Across every culture, the mission of the 1 is the same — to open a path no one has walked, so that others may follow.",
+2:"The 2 has moved quietly through history as the unifier and the bridge. Among the Haudenosaunee nations of North America, the Great Peacemaker united five warring peoples under one Great Law of Peace, a model of confederation later studied by the founders of nations. In courts and councils across the world, the 2 energy has worked not by force but by weaving — turning enemies into allies and division into shared purpose. Their mission is to heal what conflict has broken.",
+3:"Wherever the 3 has appeared, beauty and language follow. In 13th-century Persia, the poet Rumi turned spiritual longing into verse so universal it remains among the most read poetry on earth, centuries and cultures later. In ancient Greece, Sappho's lyric voice gave shape to human emotion in ways that helped define poetry itself. The mission of the 3 is to take what the heart feels and give it a form the whole world can share.",
+4:"The 4 built the monuments that outlived their makers. In Egypt, Imhotep — architect, healer, and sage — designed the first great stone pyramid and was so revered that later generations honored him as a god of wisdom. The engineers who laid Rome's roads and aqueducts and the builders of China's Great Wall carried the same vibration: structure meant to endure across millennia. The mission of the 4 is to build foundations strong enough for whole civilizations to stand upon.",
+5:"The 5 has always carried humanity across its own borders. The Moroccan scholar Ibn Battuta journeyed some 75,000 miles across the medieval world, from West Africa to China, recording the peoples and customs he met along the way. Explorers, traders, and reformers of this number expand what the world believes is possible. Their mission is to connect the distant and remind every culture that it belongs to something larger than itself.",
+6:"The 6 vibration belongs to the healers and protectors of the human family. In the 19th century, Florence Nightingale transformed nursing from neglect into a discipline of care, saving countless lives and founding much of modern healthcare practice. Across cultures, the 6 appears as the one who tends the wounded and holds the community together. Their mission is to make the world a place where people are truly cared for.",
+7:"The 7 has sought the hidden order beneath all things. In ancient Greece, Pythagoras taught that number and music revealed the structure of the cosmos, founding a school that fused mathematics with the sacred. In China, Lao Tzu distilled the mysteries of existence into the Tao Te Ching, still a guide for living in harmony with the unseen. The mission of the 7 is to seek truth in the depths and return with wisdom for the rest of us.",
+8:"The 8 has mastered the material world and bent its power toward legacy. In 14th-century Mali, Mansa Musa commanded wealth so vast that his pilgrimage reshaped economies along its path — and he poured that fortune into the universities and libraries of Timbuktu that drew scholars from across the world. The 8 energy understands that abundance is not for hoarding but for building. Their mission is to turn wealth and power into institutions that outlast them.",
+9:"The 9 gives itself to all of humanity. In ancient India, the emperor Ashoka, after witnessing the horror of his own conquest, renounced violence and rebuilt his reign around compassion, tolerance, and public welfare — carving edicts of mercy into stone across his empire. The 9 vibration completes cycles and serves the whole. Their mission is to leave humanity gentler than they found it.",
+11:"The 11 carries vision that others cannot yet see. In 15th-century France, a young Joan of Arc, guided by what she described as divine voices, rallied a broken nation and changed the course of its history before she was twenty. Across traditions the 11 appears as the prophet and the illuminator, channeling insight that moves multitudes. Their mission is to bring light into darkness, whatever the cost to themselves.",
+22:"The 22 — your number — is the rarest force in history: vision made real at monumental scale. It is the vibration of those who did not merely dream of a better world but built it in stone, in law, and in institutions that outlasted their own lifetimes. Where the 11 sees the vision, the 22 lays the foundation, raises the structure, and leaves behind something humanity can live inside for centuries. Your mission is the Master Builder's — to take what others call impossible and make it inevitable.",
+33:"The 33 is the rarest path of all — the Master Teacher, the vibration of pure devotion. Across every tradition it has appeared in the great healers and teachers who gave their lives entirely to the upliftment of others, asking nothing in return. Their love was never merely personal but universal, poured out for the whole of humanity. Their mission is to heal and to teach, and to show the world what selfless service truly looks like."
+};
+function showLifePathInfo(){const e=getSession();if(!isPremium(e)){alert('Your full Life Path profile is an Abundant member feature. Upgrade to unlock the complete reading written for your number.');return;}const pr=LP_PROFILES[currentLP];if(!pr)return;document.getElementById('lpiNum').textContent=currentLP;document.getElementById('lpiTitle').textContent=(LP_MEANINGS[currentLP]||['Your Path'])[0];document.getElementById('lpiMaster').textContent=(currentLP===11||currentLP===22||currentLP===33)?'✦ Master Number':'';const blocks=[['Your Essence',pr.essence],['Your Strengths',pr.strengths],['Your Challenges',pr.challenges],['Life Purpose',pr.purpose],['In Love',pr.love],['Career & Abundance',pr.career],['Spiritual Lesson',pr.spiritual]];document.getElementById('lpiBody').innerHTML=blocks.map(b=>'<div class="lp-info-block"><h4>'+b[0]+'</h4><p>'+b[1]+'</p></div>').join('')+'<div class="lp-info-block"><button class="btn-set" style="width:100%;" onclick="showLifePathHistory()">✦ Through the Ages — Leaders of Your Number</button></div><div style="height:50px;"></div>';document.getElementById('lpInfoOverlay').classList.add('open');document.getElementById('lpInfoOverlay').scrollTop=0;}
+function closeLifePathInfo(){document.getElementById('lpInfoOverlay').classList.remove('open');}
+function showLifePathHistory(){const h=LP_HISTORY[currentLP];if(!h)return;document.getElementById('lpaNum').textContent=currentLP;document.getElementById('lpaSub').textContent='Leaders & Cultures of the '+currentLP;document.getElementById('lpaBody').innerHTML='<div class="lp-info-block"><h4>Across History</h4><p>'+h+'</p></div><div style="height:50px;"></div>';document.getElementById('lpAgesOverlay').classList.add('open');document.getElementById('lpAgesOverlay').scrollTop=0;}
+function closeLifePathHistory(){document.getElementById('lpAgesOverlay').classList.remove('open');}
+function calcLifePath(){
+const v=document.getElementById('dobInput').value;if(!v)return;
+const [y,m,day]=v.split('-').map(Number);
+const mr=reduceNum(m),dr=reduceNum(day),yr=reduceNum(String(y).split('').reduce((a,b)=>a+parseInt(b),0));
+const total=reduceNum(mr+dr+yr);currentLP=total;{const e2=getSession();if(e2){const d2=getData(e2);d2.dob=v;saveData(e2,d2);renderNumerology(d2);}}
+const meaning=LP_MEANINGS[total]||["Your Path",""];
+document.getElementById('lpNum').textContent=total;
+document.getElementById('lpTitle').textContent=meaning[0];
+document.getElementById('lpMaster').textContent=(total===11||total===22||total===33)?'✦ Master Number':'';
+document.getElementById('lpDesc').textContent='"'+meaning[1]+'"';
+document.getElementById('lpResult').classList.add('show');}
+
+const CHECK_ITEMS=["Did you read today?","Did you workout today?","Did you meditate today?","Did you visualize today?","Did you write affirmations today?"];
+
+let tourStep=0;
+const TOUR_STEPS=[
+{n:'1 / 4',t:'Welcome to G.I.W.G',x:'Gratitude is your foundation. Everything here helps you grow in mind, body, spirit, and heart.'},
+{n:'2 / 4',t:'Your Four Pillars',x:'Each day, nurture your Mental, Physical, Spiritual, and Emotional pillars. Check them off as you go and watch them light up.'},
+{n:'3 / 4',t:'Vision & Affirmation',x:'Set your vision balance, watch your growth trajectory climb, and affirm your abundance daily.'},
+{n:'4 / 4',t:'Know Yourself',x:'Your Life Path, your cosmic profile, your dreams — grounded in gratitude. These are your north stars. Welcome home.'}
+];
+function startTour(){tourStep=0;document.getElementById('tourOverlay').classList.add('open');updateTourStep();}
+function nextTour(){tourStep++;if(tourStep>=TOUR_STEPS.length){closeTour();}else{updateTourStep();}}
+function updateTourStep(){const st=TOUR_STEPS[tourStep];document.getElementById('tourNum').textContent='Step '+st.n;document.getElementById('tourTitle').textContent=st.t;document.getElementById('tourText').textContent=st.x;const b=document.querySelector('.tour-next');if(b)b.textContent=(tourStep===TOUR_STEPS.length-1)?'Begin ✦':'Next →';}
+function closeTour(){document.getElementById('tourOverlay').classList.remove('open');}
+
+function renderGettingStarted(d){
+const guide=document.getElementById('onboardingGuide');if(!guide)return;
+if(!d.joined)return;
+const days=Math.floor((Date.now()-d.joined)/86400000);
+if(days>2){guide.classList.add('hidden');return;}
+guide.classList.remove('hidden');
+const today=new Date().toDateString();
+const items=(d.checklist&&d.checklist.date===today)?d.checklist.items:[false,false,false,false,false];
+const todayStr=new Date().toLocaleDateString();
+const gratDone=(d.gratitude||[]).some(g=>g.date===todayStr);
+const pillarDone=items.some(Boolean);
+const visionDone=(d.balance||0)>0;
+const steps=[
+{label:'Log one gratitude',done:gratDone},
+{label:'Complete one pillar',done:pillarDone},
+{label:'Set your vision balance',done:visionDone}
+];
+document.getElementById('gsTitle').textContent='✦ Getting Started · Day '+(days+1)+' of 3';
+document.getElementById('gsItems').innerHTML=steps.map(st=>'<div class="gs-item"><span class="gs-ico">'+(st.done?'✓':'○')+'</span><span style="'+(st.done?'opacity:.5;text-decoration:line-through;':'')+'">'+st.label+'</span></div>').join('');
+}
+function renderPillars(d){const today=new Date().toDateString();const items=(d.checklist&&d.checklist.date===today)?d.checklist.items:[false,false,false,false,false];const todayStr=new Date().toLocaleDateString();const gratToday=(d.gratitude||[]).some(g=>g.date===todayStr);const P=[['🧠','Mental',items[0]||items[3]],['💪','Physical',items[1]],['✦','Spiritual',items[2]],['❤','Emotional',items[4]||gratToday]];const grid=document.getElementById('pillarGrid');if(grid)grid.innerHTML=P.map(p=>'<div class="pillar '+(p[2]?'on':'')+'"><div class="pillar-ico">'+p[0]+'</div><div class="pillar-name">'+p[1]+'</div></div>').join('');const n=P.filter(p=>p[2]).length;const pc=document.getElementById('pillarCount');if(pc)pc.textContent=n+' / 4 PILLARS NURTURED TODAY';}
+function renderChecklist(d){const today=new Date().toDateString();let c=d.checklist;if(!c||c.date!==today){c={date:today,items:[false,false,false,false,false]};d.checklist=c;saveData(getSession(),d);}const done=c.items.filter(Boolean).length;document.getElementById('checkProgress').textContent=done+' / '+CHECK_ITEMS.length+' COMPLETE TODAY';document.getElementById('checklist').innerHTML=CHECK_ITEMS.map((t,i)=>'<div class="check-item '+(c.items[i]?'done':'')+'" onclick="toggleCheck('+i+')"><div class="check-box">'+(c.items[i]?'✓':'')+'</div><div class="check-text">'+t+'</div></div>').join('');}
+function toggleCheck(i){const e=getSession();const d=getData(e);const today=new Date().toDateString();if(!d.checklist||d.checklist.date!==today)d.checklist={date:today,items:[false,false,false,false,false]};d.checklist.items[i]=!d.checklist.items[i];saveData(e,d);renderChecklist(d);renderPillars(d);renderGettingStarted(d);}
+
+function randSeeds(n){return Array.from({length:n},()=>Math.floor(Math.random()*1000000));}
+function generateVision(){const e=getSession();const p=document.getElementById('visionPrompt').value.trim();if(!p){alert('Describe the future you want to see.');return;}const d=getData(e);d.vision={prompt:p,seeds:randSeeds(6)};saveData(e,d);renderVisionBoard(d);}
+function shuffleVision(){const e=getSession();const d=getData(e);const v=d.vision;if(!v||Array.isArray(v)||!v.prompt){alert('Add a vision prompt first, then shuffle.');return;}v.seeds=randSeeds(6);d.vision=v;saveData(e,d);renderVisionBoard(d);}
+function renderVisionBoard(d){const grid=document.getElementById('visionGrid');const v=d.vision;if(!v||Array.isArray(v)||!v.prompt){grid.innerHTML='<div class="vision-loading">Describe your dream life above to manifest your board.</div>';return;}if(document.getElementById('visionPrompt'))document.getElementById('visionPrompt').value=v.prompt;const cap=v.prompt.split(/[ ,]+/).filter(Boolean).join(' · ');const enc=encodeURIComponent(v.prompt);const cards=v.seeds.map(function(sd){return '<div class="vision-card full"><img loading="lazy" src="https://image.pollinations.ai/prompt/'+enc+'?width=400&height=400&seed='+sd+'&nologo=true&model=flux" onerror="this.onerror=null;this.src=\'https://picsum.photos/400/400?random='+sd+'\'"/></div>';}).join('');grid.innerHTML='<div class="vision-cap">'+cap+'</div>'+cards;}
+
+
+/* ===================== ASTROLOGY ENGINE ===================== */
+const _D2R=Math.PI/180,_R2D=180/Math.PI;
+const _sind=x=>Math.sin(x*_D2R),_cosd=x=>Math.cos(x*_D2R),_tand=x=>Math.tan(x*_D2R);
+const _atan2d=(y,x)=>Math.atan2(y,x)*_R2D;
+const _rev=x=>{x=x%360;return x<0?x+360:x;};
+const ZSIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const ZSYM={Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',Virgo:'♍',Libra:'♎',Scorpio:'♏',Sagittarius:'♐',Capricorn:'♑',Aquarius:'♒',Pisces:'♓'};
+const signOf=lon=>ZSIGNS[Math.floor(_rev(lon)/30)];
+function julianDay(Y,M,D,UT){return 367*Y-Math.floor(7*(Y+Math.floor((M+9)/12))/4)+Math.floor(275*M/9)+D+1721013.5+UT/24;}
+function _sunLon(d){const w=282.9404+4.70935e-5*d;const e=0.016709-1.151e-9*d;const M=_rev(356.0470+0.9856002585*d);let E=M+_R2D*e*_sind(M)*(1+e*_cosd(M));const xv=_cosd(E)-e,yv=Math.sqrt(1-e*e)*_sind(E);return {lon:_rev(_atan2d(yv,xv)+w),M:M,w:w};}
+function _moonLon(d){const N=_rev(125.1228-0.0529538083*d),i=5.1454,w=_rev(318.0634+0.1643573223*d),a=60.2666,e=0.054900,M=_rev(115.3654+13.0649929509*d);let E=M+_R2D*e*_sind(M)*(1+e*_cosd(M));for(let k=0;k<5;k++){E=E-(E-_R2D*e*_sind(E)-M)/(1-e*_cosd(E));}const x=a*(_cosd(E)-e),y=a*Math.sqrt(1-e*e)*_sind(E);const r=Math.sqrt(x*x+y*y),v=_atan2d(y,x);let xe=r*(_cosd(N)*_cosd(v+w)-_sind(N)*_sind(v+w)*_cosd(i));let ye=r*(_sind(N)*_cosd(v+w)+_cosd(N)*_sind(v+w)*_cosd(i));let lon=_rev(_atan2d(ye,xe));const s=_sunLon(d),Ms=s.M,ws=s.w;const Ls=_rev(ws+Ms),Lm=_rev(N+w+M),Dm=_rev(Lm-Ls),F=_rev(Lm-N);lon+=-1.274*_sind(M-2*Dm)+0.658*_sind(2*Dm)-0.186*_sind(Ms)-0.059*_sind(2*M-2*Dm)-0.057*_sind(M-2*Dm+Ms)+0.053*_sind(M+2*Dm)+0.046*_sind(2*Dm-Ms)+0.041*_sind(M-Ms)-0.035*_sind(Dm)-0.031*_sind(M+Ms)-0.015*_sind(2*F-2*Dm)+0.011*_sind(M-4*Dm);return _rev(lon);}
+function _ascendant(JD,lat,lonE,d){const T=(JD-2451545.0)/36525;let G=280.46061837+360.98564736629*(JD-2451545.0)+0.000387933*T*T-(T*T*T)/38710000;const LST=_rev(_rev(G)+lonE);const eps=23.4393-3.563e-7*d;return _rev(_atan2d(_cosd(LST),-(_sind(LST)*_cosd(eps)+_tand(lat)*_sind(eps))));}
+const CITIES=[
+{n:"— Select your birth city —",lat:"",lon:"",tz:""},
+{n:"Detroit, USA",lat:42.33,lon:-83.05,tz:-5},
+{n:"New York, USA",lat:40.71,lon:-74.01,tz:-5},
+{n:"Chicago, USA",lat:41.88,lon:-87.63,tz:-6},
+{n:"Los Angeles, USA",lat:34.05,lon:-118.24,tz:-8},
+{n:"Houston, USA",lat:29.76,lon:-95.37,tz:-6},
+{n:"Atlanta, USA",lat:33.75,lon:-84.39,tz:-5},
+{n:"Miami, USA",lat:25.76,lon:-80.19,tz:-5},
+{n:"Toronto, Canada",lat:43.65,lon:-79.38,tz:-5},
+{n:"Mexico City, Mexico",lat:19.43,lon:-99.13,tz:-6},
+{n:"London, UK",lat:51.51,lon:-0.13,tz:0},
+{n:"Paris, France",lat:48.86,lon:2.35,tz:1},
+{n:"Berlin, Germany",lat:52.52,lon:13.40,tz:1},
+{n:"Lagos, Nigeria",lat:6.52,lon:3.38,tz:1},
+{n:"Accra, Ghana",lat:5.60,lon:-0.19,tz:0},
+{n:"Cairo, Egypt",lat:30.04,lon:31.24,tz:2},
+{n:"Johannesburg, S. Africa",lat:-26.20,lon:28.05,tz:2},
+{n:"Nairobi, Kenya",lat:-1.29,lon:36.82,tz:3},
+{n:"Dubai, UAE",lat:25.20,lon:55.27,tz:4},
+{n:"Mumbai, India",lat:19.08,lon:72.88,tz:5.5},
+{n:"Beijing, China",lat:39.90,lon:116.41,tz:8},
+{n:"Tokyo, Japan",lat:35.68,lon:139.69,tz:9},
+{n:"Sydney, Australia",lat:-33.87,lon:151.21,tz:10},
+{n:"Sao Paulo, Brazil",lat:-23.55,lon:-46.63,tz:-3},
+{n:"Kingston, Jamaica",lat:18.02,lon:-76.80,tz:-5}
+];
+function computeChart(a){if(!a||!a.date)return null;const P=a.date.split('-').map(Number);const Y=P[0],M=P[1],D=P[2];const t=(a.time||'12:00').split(':').map(Number);const localH=t[0]+(t[1]||0)/60;const tz=(a.tz!==''&&a.tz!==undefined&&a.tz!==null)?Number(a.tz):0;const UT=localH-tz;const dd=julianDay(Y,M,D,UT)-2451543.5;const JD=julianDay(Y,M,D,UT);const res={sun:signOf(_sunLon(dd).lon)};res.moon=signOf(_moonLon(dd));if(a.lat!==''&&a.lat!==undefined&&a.lat!==null&&a.time){res.asc=signOf(_ascendant(JD,Number(a.lat),Number(a.lon),dd));}else{res.asc=null;}return res;}
+function currentSky(){const now=new Date();const UT=now.getUTCHours()+now.getUTCMinutes()/60;const dd=julianDay(now.getUTCFullYear(),now.getUTCMonth()+1,now.getUTCDate(),UT)-2451543.5;return {moon:signOf(_moonLon(dd)),season:signOf(_sunLon(dd).lon)};}
+function nextSolarEvent(){const map={0:'Spring Equinox ♈',3:'Summer Solstice ♋',6:'Autumn Equinox ♎',9:'Winter Solstice ♑'};const now=new Date();const sidx=dt=>Math.floor(_rev(_sunLon(julianDay(dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate(),12)-2451543.5).lon)/30);let prev=sidx(now);for(let k=1;k<400;k++){const dt=new Date(now.getTime()+k*86400000);const idx=sidx(dt);if(idx!==prev&&map[idx]!==undefined){return map[idx].split(' ')[0]+' '+map[idx].split(' ')[1]+' · '+dt.toLocaleDateString(undefined,{month:'short',day:'numeric'});}prev=idx;}return '';}
+
+function populateCities(){const sel=document.getElementById('obCity');if(!sel||sel.options.length)return;sel.innerHTML=CITIES.map((c,i)=>'<option value="'+i+'">'+c.n+'</option>').join('');}
+function showOnboarding(){populateCities();const e=getSession();const d=getData(e);if(d&&d.astro){if(d.astro.date)document.getElementById('obDate').value=d.astro.date;if(d.astro.time)document.getElementById('obTime').value=d.astro.time;if(d.astro.cityIdx)document.getElementById('obCity').value=d.astro.cityIdx;}document.getElementById('onboardOverlay').classList.add('open');}
+function skipOnboarding(){const e=getSession();const d=getData(e);const date=document.getElementById('obDate').value;const time=document.getElementById('obTime').value;const ci=parseInt(document.getElementById('obCity').value||'0',10);if(date||time||ci){const city=CITIES[ci]||CITIES[0];d.astro={date:date||'',time:time||'',cityIdx:ci,lat:city.lat,lon:city.lon,tz:city.tz};if(date)d.dob=date;saveData(e,d);renderCosmic(d);renderNumerology(d);}document.getElementById('onboardOverlay').classList.remove('open');}
+function saveOnboarding(){const e=getSession();const d=getData(e);const date=document.getElementById('obDate').value;const time=document.getElementById('obTime').value;const ci=parseInt(document.getElementById('obCity').value||'0',10);const err=document.getElementById('obError');if(!date){err.textContent='Birth date is required.';return;}const city=CITIES[ci]||CITIES[0];d.astro={date:date,time:time,cityIdx:ci,lat:city.lat,lon:city.lon,tz:city.tz};if(date){const dp=date.split('-');d.dob=date;}saveData(e,d);err.textContent='';document.getElementById('onboardOverlay').classList.remove('open');renderCosmic(d);renderNumerology(d);}
+function renderCosmic(d){const sky=currentSky();var eb=document.getElementById('editBirthBtn');const complete=d.astro&&d.astro.date;if(eb)eb.textContent=complete?'✦ Edit Birth Details':'✦ Complete Your Cosmic Profile — add later';document.getElementById('skySeason').textContent=ZSYM[sky.season]+' '+sky.season;document.getElementById('skyMoon').textContent=ZSYM[sky.moon]+' '+sky.moon;document.getElementById('skyEvent').textContent=nextSolarEvent();const ch=computeChart(d.astro);if(ch){document.getElementById('sunSign').textContent=ZSYM[ch.sun]+' '+ch.sun;document.getElementById('moonSign').textContent=ZSYM[ch.moon]+' '+ch.moon;document.getElementById('ascSign').textContent=ch.asc?(ZSYM[ch.asc]+' '+ch.asc):'Add time + place';}else{document.getElementById('sunSign').textContent='Tap below';document.getElementById('moonSign').textContent='to add';document.getElementById('ascSign').textContent='your birth';}}
+
+/* ---------- helpers ---------- */
+function reduceSingle(n){while(n>9){n=String(n).split('').reduce((a,b)=>a+parseInt(b),0);}return n;}
+
+/* ---------- growth trajectory chart ---------- */
+function renderChart(d){
+const svg=document.getElementById('growthChart');if(!svg)return;
+const bal=(d.vision&&0)||d.balance||0;const start=d.balance||0;const g=(d.growth||0)/100;
+const pts=[];for(let day=0;day<=90;day+=5){pts.push(start*Math.pow(1+g,day));}
+const max=Math.max.apply(null,pts)||1;const min=Math.min.apply(null,pts);
+const W=320,H=140,pad=8;
+const coords=pts.map((v,i)=>{const x=pad+(i/(pts.length-1))*(W-2*pad);const y=H-pad-((v-min)/((max-min)||1))*(H-2*pad);return x.toFixed(1)+','+y.toFixed(1);});
+const line=coords.join(' ');
+const area='M'+coords[0]+' L'+coords.join(' L')+' L'+(W-pad)+','+(H-pad)+' L'+pad+','+(H-pad)+' Z';
+svg.innerHTML='<defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(0,200,150,0.35)"/><stop offset="100%" stop-color="rgba(0,200,150,0)"/></linearGradient></defs>'
++'<path d="'+area+'" fill="url(#cg)"/>'
++'<polyline points="'+line+'" fill="none" stroke="#00c896" stroke-width="2.5"/>'
++'<circle cx="'+coords[coords.length-1].split(',')[0]+'" cy="'+coords[coords.length-1].split(',')[1]+'" r="4" fill="#f0c040"/>';
+const end=pts[pts.length-1];
+document.getElementById('chartCap').textContent=(g>0?('Projected to '+fmt(end)+' in 90 days'):'Set a daily growth % to see your trajectory climb');
+}
+
+/* ---------- numerology today ---------- */
+const PY_DESC={1:"A year of fresh starts and bold moves.",2:"A year of patience, partnership, and quiet growth.",3:"A year of expression, creativity, and joy.",4:"A year to build foundations and work the plan.",5:"A year of change, freedom, and new doors.",6:"A year of love, responsibility, and home.",7:"A year of reflection, study, and inner work.",8:"A year of power, money, and big achievement.",9:"A year of completion, release, and giving."};
+const DN_DESC={1:"Lead. Begin something today.",2:"Cooperate. Tend a relationship.",3:"Create and communicate.",4:"Focus and handle the details.",5:"Embrace change; stay flexible.",6:"Care for others and home.",7:"Reflect; trust your intuition.",8:"Make a power move with money.",9:"Let go of what's complete."};
+function renderNumerology(d){
+const now=new Date();
+const dn=reduceSingle(now.getFullYear()+(now.getMonth()+1)+now.getDate());
+document.getElementById('dnNum').textContent=dn;
+document.getElementById('dnDesc').textContent=DN_DESC[dn]||'';
+if(d.dob){const [y,m,day]=d.dob.split('-').map(Number);const py=reduceSingle(m+day+now.getFullYear());document.getElementById('pyNum').textContent=py;document.getElementById('pyDesc').textContent=PY_DESC[py]||'';}
+else{document.getElementById('pyNum').textContent='—';document.getElementById('pyDesc').textContent='Calculate your Life Path first';}
+}
+
+/* ---------- moon phase ---------- */
+function renderMoon(){
+const now=new Date();
+const lp=2551443;const newMoon=new Date(1970,0,7,20,35,0).getTime()/1000;
+const phase=((now.getTime()/1000-newMoon)%lp)/lp;
+const idx=Math.floor(phase*8+0.5)%8;
+const moons=[['🌑','New Moon','Plant seeds. Set your clearest intention.'],['🌒','Waxing Crescent','Take the first small action toward it.'],['🌓','First Quarter','Push through resistance. Commit.'],['🌔','Waxing Gibbous','Refine and stay the course.'],['🌕','Full Moon','Receive and celebrate. Gratitude amplifies.'],['🌖','Waning Gibbous','Share your abundance outward.'],['🌗','Last Quarter','Release what no longer serves.'],['🌘','Waning Crescent','Rest, reflect, and surrender.']];
+const m=moons[idx];
+document.getElementById('moonEmoji').textContent=m[0];
+document.getElementById('moonPhase').textContent=m[1];
+document.getElementById('moonAction').textContent=m[2];
+}
+
+/* ---------- milestone celebration ---------- */
+function checkMilestone(d){
+const milestones=[7,30,90,180,365];
+if(!d.celebrated)d.celebrated=[];
+let hit=null;
+milestones.forEach(m=>{if(d.streak>=m&&d.celebrated.indexOf(m)<0){hit=m;}});
+if(hit){d.celebrated.push(hit);saveData(getSession(),d);
+document.getElementById('celebrateNum').textContent=hit;
+document.getElementById('celebrateTitle').textContent=hit+' Day Streak!';
+document.getElementById('celebrateSub').textContent='You have shown up '+hit+' days in a row. Consistency is how the vision becomes real.';
+document.getElementById('celebrateOverlay').classList.add('open');}
+}
+function closeCelebrate(){document.getElementById('celebrateOverlay').classList.remove('open');}
+
+/* ---------- mind movie ---------- */
+let mmTimer=null,mmIdx=0;
+function startMindMovie(){
+const e=getSession();const d=getData(e);const v=d.vision;
+if(!v||Array.isArray(v)||!v.prompt){alert('Create your vision board first, then play your Mind Movie.');return;}
+document.getElementById('mmOverlay').classList.add('open');
+document.getElementById('mmAffirm').textContent='"'+(d.customAffirm||AFFIRMATIONS[dayOfYear()%AFFIRMATIONS.length])+'"';
+const enc=encodeURIComponent(v.prompt);const img=document.getElementById('mmImg');mmIdx=0;
+const show=()=>{const sd=v.seeds[mmIdx%v.seeds.length];img.classList.remove('show');setTimeout(()=>{img.src='https://image.pollinations.ai/prompt/'+enc+'?width=600&height=900&seed='+sd+'&nologo=true&model=flux';img.onload=()=>img.classList.add('show');img.onerror=()=>{img.src='https://picsum.photos/600/900?random='+sd;img.classList.add('show');};},300);mmIdx++;};
+show();mmTimer=setInterval(show,4500);
+if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+try{if(osc){osc.stop();}osc=audioCtx.createOscillator();gain=audioCtx.createGain();osc.type='sine';osc.frequency.value=528;gain.gain.value=0.08;osc.connect(gain);gain.connect(audioCtx.destination);osc.start();activeFreq=528;}catch(err){}
+}
+function stopMindMovie(){document.getElementById('mmOverlay').classList.remove('open');if(mmTimer)clearInterval(mmTimer);mmTimer=null;if(osc){try{osc.stop();}catch(e){}osc=null;activeFreq=null;}}
+
+/* ---------- share card (canvas) ---------- */
+let shareDataUrl=null;
+function wrapText(ctx,text,x,y,maxW,lh){const words=text.split(' ');let line='';let yy=y;for(let i=0;i<words.length;i++){const test=line+words[i]+' ';if(ctx.measureText(test).width>maxW&&i>0){ctx.fillText(line.trim(),x,yy);line=words[i]+' ';yy+=lh;}else{line=test;}}ctx.fillText(line.trim(),x,yy);return yy;}
+function buildCard(mainText,sub){
+const c=document.getElementById('cardCanvas');const ctx=c.getContext('2d');const W=1080,H=1080;
+const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#0a0e1a');g.addColorStop(0.5,'#0d1525');g.addColorStop(1,'#091320');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+const rg=ctx.createRadialGradient(W*0.8,120,0,W*0.8,120,500);rg.addColorStop(0,'rgba(0,200,150,0.18)');rg.addColorStop(1,'rgba(0,200,150,0)');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+for(let i=0;i<60;i++){ctx.fillStyle='rgba(255,255,255,'+(Math.random()*0.5)+')';ctx.beginPath();ctx.arc(Math.random()*W,Math.random()*H,Math.random()*1.8,0,7);ctx.fill();}
+ctx.textAlign='center';
+ctx.fillStyle='#00c896';ctx.font='bold 30px monospace';ctx.fillText('G . I . W . G',W/2,150);
+ctx.fillStyle='rgba(232,228,216,0.5)';ctx.font='24px monospace';ctx.fillText('GOT IT WITH GRATITUDE',W/2,195);
+ctx.fillStyle='#e8e4d8';ctx.font='italic 56px Georgia';wrapText(ctx,mainText,W/2,W/2-40,860,72);
+ctx.fillStyle='#f0c040';ctx.font='26px monospace';ctx.fillText(sub||'manifest with gratitude',W/2,H-150);
+ctx.fillStyle='rgba(232,228,216,0.4)';ctx.font='22px monospace';ctx.fillText('giwg.org',W/2,H-100);
+shareDataUrl=c.toDataURL('image/png');
+return shareDataUrl;
+}
+function openShare(url){document.getElementById('shareImg').src=url;document.getElementById('shareOverlay').classList.add('open');}
+function closeShare(){document.getElementById('shareOverlay').classList.remove('open');}
+function shareAffirmation(){const e=getSession();const d=getData(e);const a=(d.customAffirm||AFFIRMATIONS[dayOfYear()%AFFIRMATIONS.length]);const url=buildCard(a,'manifest with gratitude');tryNativeShare(url,a);openShare(url);}
+function tryNativeShare(url,text){if(navigator.share&&navigator.canShare){fetch(url).then(r=>r.blob()).then(b=>{const file=new File([b],'giwg-affirmation.png',{type:'image/png'});if(navigator.canShare({files:[file]})){navigator.share({files:[file],text:text+' — via G.I.W.G  giwg.org'}).catch(()=>{});}}).catch(()=>{});}}
+function downloadShare(){if(!shareDataUrl)return;const a=document.createElement('a');a.href=shareDataUrl;a.download='giwg-card.png';a.click();}
+
+/* ---------- referral ---------- */
+function refCodeFor(email){let h=0;for(let i=0;i<email.length;i++){h=((h<<5)-h+email.charCodeAt(i))|0;}return 'GIWG-'+Math.abs(h).toString(36).toUpperCase().slice(0,5);}
+function renderReferral(email){document.getElementById('refCode').textContent=refCodeFor(email);}
+function shareReferral(){const e=getSession();const code=refCodeFor(e);const msg='Join me on G.I.W.G — manifest your abundance. Use my code '+code+' at giwg.org';if(navigator.share){navigator.share({text:msg,url:'https://giwg.org'}).catch(()=>{});}else{navigator.clipboard&&navigator.clipboard.writeText(msg);alert('Invite copied:\n\n'+msg);}}
+
+/* ---------- daily reminder ---------- */
+function enableReminder(){if(!('Notification' in window)){alert('Notifications are not supported on this device.');return;}Notification.requestPermission().then(perm=>{const b=document.getElementById('reminderBtn');if(perm==='granted'){b.textContent='✓ Daily Reminder On';try{new Notification('G.I.W.G',{body:'Your daily reminder is set. Time to manifest. ✦'});}catch(e){}}else{b.textContent='🔔 Remind Me to Manifest Daily';alert('Enable notifications in your settings to turn this on.');}});}
+
+/* ---------- payments ---------- */
+function handleAnnual(){if(ANNUAL_URL.includes('YOUR-')){alert('Connect your annual Stripe link (ANNUAL_URL) to enable this.');return;}window.open(ANNUAL_URL,'_blank');}
+function handleGift(){if(GIFT_URL.includes('YOUR-')){alert('Connect your gift Stripe link (GIFT_URL) to enable this.');return;}window.open(GIFT_URL,'_blank');}
+
+function renderTx(txs){document.getElementById('txList').innerHTML=(txs||[]).map(t=>`<div class="tx-item"><div><div class="tx-desc">${t.desc}</div><div class="tx-date">${t.date}</div></div><div class="tx-amount ${t.type==='credit'?'tx-credit':'tx-debit'}">${t.type==='credit'?'+':''}${fmt(t.amount)}</div></div>`).join('');}
+
+let audioCtx=null,osc=null,gain=null,activeFreq=null;
+function renderFreqs(email){const prem=isPremium(email||getSession());document.getElementById('freqRow').innerHTML=FREQS.map((f,i)=>{const locked=!prem&&i>=FREE_FREQ_MAX;return `<button class="freq-btn ${locked?'locked':''}" id="freq${f.hz}" onclick="${locked?'alert(\'Upgrade to Abundant for all frequencies.\')':'toggleFreq('+f.hz+')'}"><span class="freq-hz">${f.hz}</span><span class="freq-name">${f.name}</span>${locked?'<span class="lock">🔒</span>':''}</button>`;}).join('');}
+function toggleFreq(hz){
+if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+if(activeFreq===hz){osc.stop();osc=null;document.getElementById('freq'+hz).classList.remove('active');activeFreq=null;return;}
+if(osc){osc.stop();document.getElementById('freq'+activeFreq).classList.remove('active');}
+osc=audioCtx.createOscillator();gain=audioCtx.createGain();osc.type='sine';osc.frequency.value=hz;gain.gain.value=0.12;osc.connect(gain);gain.connect(audioCtx.destination);osc.start();
+activeFreq=hz;document.getElementById('freq'+hz).classList.add('active');}
+
+function handleUpgrade(){if(SUBSCRIBE_URL.includes('YOUR-')){alert('Connect your Stripe checkout link to enable subscriptions. Edit SUBSCRIBE_URL in the code.');return;}window.open(SUBSCRIBE_URL,'_blank');}
+function handleDonate(){if(DONATE_URL.includes('YOUR-')){alert('Connect your Venmo/PayPal link to enable donations. Edit DONATE_URL in the code.');return;}window.open(DONATE_URL,'_blank');}
+
+function handleLogout(){if(growthTimer)clearInterval(growthTimer);if(osc){osc.stop();osc=null;}clearSession();document.getElementById('dashboard').style.display='none';document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('loginEmail').value='';document.getElementById('loginPassword').value='';}
+
+window.addEventListener('load',()=>{const e=getSession();if(e&&getUsers()[e])loadDashboard(e);});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+</script>
+</body>
+</html>
